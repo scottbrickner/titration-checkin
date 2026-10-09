@@ -218,7 +218,7 @@ const V={
   <div class="start"><h2>Before you start</h2><ol>
    <li>Have the RN pull up the order involved in the finding.</li>
    <li>Know which audit finding or findings you're addressing.</li>
-   <li>Know who will audit the RN's next shift with a titratable vasoactive infusion.</li></ol>
+   <li>Have the Debrief Completion Record tab ready to log the check-in when you finish.</li></ol>
   <p class="note">No patient information goes on this page or in the completion record. The case patient is fictional.</p></div>
   ${actions(CONFIG.formUrl?`<a class="btn out" href="${esc(teamsApp(CONFIG.formUrl))}">Open check-in log</a>`:"",btn("Start debrief","start"))}`;},
  p1(){return `<div class="eyebrow">Part 1 of 4 · Review the error</div><h1>What did the audit find?</h1><p class="hint">Select every finding that applies.</p>
@@ -257,7 +257,7 @@ const V={
  sum(){const n=firstTry();const detail=S.res.map(r=>`Q${r.q} ${r.correctFirst?"first try":r.att+" attempts"}`).join(" · ");
   const url=formLink();
   return `<div class="eyebrow">Record completion</div><h1>Debrief complete</h1>
-  <p class="lead">Copy the debrief record, open the completion record, and paste it into Debrief record. Then pick the RN, unit and follow-up auditor.</p>
+  <p class="lead">Copy the debrief record, open the Debrief Completion Record, pick the RN, paste the record and save. The RN's manager is emailed automatically.</p>
   <div class="record"><div class="lbl">Debrief record</div><code id="rec">${esc(recordText())}</code>
    <button class="btn" data-act="copy">${S.copied?"Copied":"Copy debrief record"}</button></div>
   <dl class="summary">
@@ -265,7 +265,7 @@ const V={
    <dt>Verbalization</dt><dd>3 of 3 items stated</dd>
    <dt>Case</dt><dd>${n} of 4 correct on the first try<br><span class="hint">${esc(detail)}</span></dd>
    <dt>Teach-back</dt><dd>5 of 5 items stated</dd>
-   <dt>Next step</dt><dd>The manager, ANM or charge nurse audits the RN's next shift with a titratable vasoactive infusion and reports the result back; record it on the completion record's Follow-up audit tab.</dd>
+   <dt>Next step</dt><dd>The RN's manager receives an email that the check-in is complete and follows up with the RN.</dd>
   </dl>
   ${actions(btn("Start a new debrief","exit",{out:1}),url?`<a class="btn" href="${esc(teamsApp(url))}">Open completion record</a>`:`<span class="hint">Completion record link not set yet (CONFIG.formUrl).</span>`)}
   ${url?`<p class="hint" style="margin-top:8px">Using Teams in a browser? <a href="${esc(url)}" target="_blank" rel="noopener">Open it in a browser tab instead</a>.</p>`:""}`;}
