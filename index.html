@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f2ede6">
+<title>NPD Quick Links</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23990000'/%3E%3Cpath d='M12 9l7 7-7 7' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<script>
+/* =====================================================================
+   EDIT HERE — everything you'll change lives in this block.
+   ---------------------------------------------------------------------
+   • To swap an initiative: change the title / blurb / url on one line.
+   • To remove a link: delete its line.  To add one: copy a line.
+   • badge: "New" (or "Due 10/31", etc.) shows a pill; delete it to hide.
+   • Numbering (01, 02…) is automatic.
+   • useUnit: true  → the tag's ?unit=XXX gets passed along to that link.
+   ===================================================================== */
+
+const THEME = "Warm neutral";   // "Warm neutral" | "Cardinal & gold" | "Clinical teal" | "Slate blue" | "Monochrome"
+
+const DO_NOW = [
+  { title: "Titration Attestation",    blurb: "Vasoactive bulletin and policy review", url: "https://forms.cloud.microsoft/r/pPKGGKkXjx", badge: "New" },
+  { title: "CCCPA Self-Assessment",    blurb: "Patient aggression confidence · 3 min", url: "https://scottbrickner.github.io/cccpa-assessment/?unit=FPICU", badge: "New" },
+  { title: "Submit Inservice Request", blurb: "For clinical ladder",                         url: "https://scottbrickner.github.io/unit-inservice-for/" },
+  { title: "NPD Rounds",               blurb: "Rounding with your NPD team",                 url: "https://teams.microsoft.com/l/entity/a6b63365-31a4-4f43-92ec-710b71557af9/_djb2_msteams_prefix_4206773083?context=%7B%22channelId%22%3A%2219%3A4RkDAlkhr3esWs_IY8p5U0uogC8Xy8gvWw1EG4ZZ-qU1%40thread.tacv2%22%7D&tenantId=a63249ac-3e0b-4a24-9e0c-c90ab9891e30" },
+];
+
+const HUBS = [
+  { title: "Ascend Skills",        blurb: "Annual skills and checklists",   url: "https://teams.microsoft.com/l/team/19%3AUtLDHvUsxuwnuLVHtm_5jR4fcx1rCUSdMYuNWN55d2I1%40thread.tacv2/conversations?groupId=09e4f472-9cde-4634-ba60-7c152693748f&tenantId=a63249ac-3e0b-4a24-9e0c-c90ab9891e30" },
+  { title: "ECG Review",           blurb: "Rhythm review for RNs and MTs",  url: "https://teams.cloud.microsoft/l/team/19%3A2OXHkGrCWqkVL6EckeP2cT4Mt3JbmTbjY-E7bR433mI1%40thread.tacv2/conversations?groupId=01a3649f-c2be-4c57-81fa-9bcf48be57a8&tenantId=a63249ac-3e0b-4a24-9e0c-c90ab9891e30" },
+  { title: "5 West Knowledge Hub", blurb: "Unit resources and references",  url: "https://teams.microsoft.com/l/team/19%3AV0g5OOPPre-VdOPJOPohNTKupuzYLXcyw81hYITi_KY1%40thread.tacv2/conversations?groupId=70b1474c-8d5e-49c5-8f58-c90dcce3a0fc&tenantId=a63249ac-3e0b-4a24-9e0c-c90ab9891e30" },
+  { title: "Float Pool ICU Hub",   blurb: "Resources for float pool staff", url: "https://teams.microsoft.com/l/team/19%3ACOzGneQ_EAiVedd8tU4Oq7rBmbcFEArPLTZkE05704o1%40thread.tacv2/conversations?groupId=63753e7b-6d43-4596-b306-0aa035653b12&tenantId=a63249ac-3e0b-4a24-9e0c-c90ab9891e30" },
+];
+
+const CONTACT = { name: "Scott", phone: "310-499-8754" };
+/* ===================== END OF EDIT BLOCK ============================= */
+</script>
+
+<style>
+  :root{
+    --bg:#f2ede6; --surface:#ffffff; --border:#c8bfb0; --ink:#111111;
+    --muted:#4a423a; --meta:#6b6156; --accent:#990000; --mark:#990000;
+    --pill-bg:#111111; --pill-ink:#f2ede6; --hover:#fdf5f5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink)}
+  body{
+    font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh; min-height:100dvh;
+  }
+  .page{
+    max-width:440px; margin:0 auto; min-height:100vh; min-height:100dvh;
+    padding:calc(24px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .top{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--border)}
+  .org{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--meta)}
+  .chip{font-size:11px;font-weight:700;letter-spacing:.14em;padding:4px 10px;background:var(--pill-bg);color:var(--pill-ink);border-radius:999px}
+
+  .hero{display:flex;flex-direction:column;gap:8px}
+  .eyebrow,.label{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--meta);text-transform:uppercase}
+  h1{margin:0;font-size:32px;line-height:34px;font-weight:900;text-transform:uppercase;letter-spacing:-.01em}
+  h1 em{font-style:normal;color:var(--accent)}
+  .bar{width:48px;height:4px;border-radius:2px;background:var(--mark)}
+  .sub{margin:0;font-size:16px;line-height:22px;color:var(--muted)}
+
+  section{display:flex;flex-direction:column;gap:6px}
+  .card{
+    display:flex;align-items:center;gap:12px;min-height:58px;padding:8px 14px;
+    background:var(--surface);border:1.5px solid var(--border);border-radius:10px;
+    color:var(--ink);text-decoration:none;
+    transition:border-color .15s, background .15s, transform .15s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .card:hover{border-color:var(--accent);background:var(--hover)}
+  .card:active{transform:scale(.99)}
+  .card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .num{font-size:22px;font-weight:900;color:var(--accent);width:30px;flex-shrink:0}
+  .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+  .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .title{font-size:16px;font-weight:900;text-transform:uppercase;letter-spacing:.01em}
+  .badge{font-size:10px;font-weight:900;letter-spacing:.12em;padding:2px 7px;background:var(--accent);color:var(--surface);border-radius:999px;text-transform:uppercase}
+  .blurb{font-size:13px;line-height:17px;color:var(--muted)}
+  .chev{flex-shrink:0;color:var(--accent)}
+  .card.soon{opacity:.55;pointer-events:none}
+  .card.soon .blurb::after{content:" · link coming soon"}
+
+  .spacer{flex:1}
+  footer{display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid var(--border)}
+  .ask{font-size:14px;line-height:19px;color:var(--muted)}
+  .ask a{color:var(--accent);font-weight:700;text-decoration:none}
+  .tag{font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--meta)}
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="top">
+    <div class="org">Keck Medicine of USC</div>
+    <div class="chip">NPDNE</div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">NPD Critical Care · Quick Links</div>
+    <h1>Your <em>quick</em> links</h1>
+    <div class="bar" aria-hidden="true"></div>
+    <p class="sub">Everything NPD, one tap away.</p>
+  </div>
+
+  <section aria-labelledby="do-now">
+    <h2 class="label" id="do-now" style="margin:0">Do now</h2>
+    <div id="doNow" style="display:flex;flex-direction:column;gap:6px"></div>
+  </section>
+
+  <section aria-labelledby="hubs">
+    <h2 class="label" id="hubs" style="margin:0">Your hubs</h2>
+    <div id="hubList" style="display:flex;flex-direction:column;gap:6px"></div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <footer>
+    <div class="ask" id="ask"></div>
+    <div class="tag">NPD CRITICAL CARE · TOGETHER WE ARE LIMITLESS</div>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const THEMES = {
+    "Warm neutral":   { bg:"#f2ede6", border:"#c8bfb0", ink:"#111111", muted:"#4a423a", meta:"#6b6156", accent:"#990000", mark:"#990000", pillBg:"#111111", pillInk:"#f2ede6", hover:"#fdf5f5" },
+    "Cardinal & gold":{ bg:"#faf7f0", border:"#e3d9c4", ink:"#1f1a12", muted:"#4f473a", meta:"#625a4c", accent:"#990000", mark:"#ffcc00", pillBg:"#990000", pillInk:"#ffcc00", hover:"#fdf5f5" },
+    "Clinical teal":  { bg:"#f1f6f6", border:"#cfdede", ink:"#10201f", muted:"#3f5352", meta:"#4c5f5e", accent:"#0f6b64", mark:"#0f766e", pillBg:"#0f3d3a", pillInk:"#ffffff", hover:"#eef7f6" },
+    "Slate blue":     { bg:"#f4f5f7", border:"#d6dae2", ink:"#141821", muted:"#454d5b", meta:"#545c6a", accent:"#2a4590", mark:"#2f4ea3", pillBg:"#1b2233", pillInk:"#ffffff", hover:"#f0f3fb" },
+    "Monochrome":     { bg:"#f6f6f5", border:"#d9d9d6", ink:"#111111", muted:"#4a4a48", meta:"#5b5b59", accent:"#111111", mark:"#111111", pillBg:"#111111", pillInk:"#ffffff", hover:"#f1f1ef" }
+  };
+  const t = THEMES[THEME] || THEMES["Warm neutral"];
+  const r = document.documentElement.style;
+  r.setProperty("--bg", t.bg); r.setProperty("--border", t.border); r.setProperty("--ink", t.ink);
+  r.setProperty("--muted", t.muted); r.setProperty("--meta", t.meta); r.setProperty("--accent", t.accent);
+  r.setProperty("--mark", t.mark); r.setProperty("--pill-bg", t.pillBg); r.setProperty("--pill-ink", t.pillInk);
+  r.setProperty("--hover", t.hover);
+  document.querySelector('meta[name="theme-color"]').content = t.bg;
+
+  // Unit comes from the tag's URL, e.g. …/npd-quick-links/?unit=FPICU
+  const unit = (new URLSearchParams(location.search).get("unit") || "").replace(/[^A-Za-z0-9_-]/g, "").slice(0, 20);
+
+  function withUnit(url) {
+    if (!unit) return url;
+    const u = new URL(url);
+    u.searchParams.set("unit", unit);
+    return u.toString();
+  }
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  const chev = '<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+
+  let n = 0;
+  function card(item) {
+    n += 1;
+    const num = String(n).padStart(2, "0");
+    const has = !!(item.url && item.url.trim());
+    const href = has ? (item.useUnit ? withUnit(item.url) : item.url) : "#";
+    const badge = item.badge ? `<span class="badge">${esc(item.badge)}</span>` : "";
+    return `<a class="card${has ? "" : " soon"}" href="${esc(href)}"${has ? "" : ' aria-disabled="true" tabindex="-1"'}>
+      <span class="num">${num}</span>
+      <span class="body">
+        <span class="head"><span class="title">${esc(item.title)}</span>${badge}</span>
+        <span class="blurb">${esc(item.blurb || "")}</span>
+      </span>${chev}</a>`;
+  }
+
+  document.getElementById("doNow").innerHTML = DO_NOW.map(card).join("");
+  document.getElementById("hubList").innerHTML = HUBS.map(card).join("");
+
+  const digits = CONTACT.phone.replace(/\D/g, "");
+  document.getElementById("ask").innerHTML =
+    `Questions? Text ${esc(CONTACT.name)} at <a href="sms:+1${digits}">${esc(CONTACT.phone)}</a>`;
+})();
+</script>
+</body>
+</html>
