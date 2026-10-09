@@ -220,7 +220,7 @@ const V={
    <li>Know which audit finding or findings you're addressing.</li>
    <li>Know who will audit the RN's next shift with a titratable vasoactive infusion.</li></ol>
   <p class="note">No patient information goes on this page or in the completion record. The case patient is fictional.</p></div>
-  ${actions(CONFIG.formUrl?`<a class="btn out" href="${esc(CONFIG.formUrl)}" target="_blank" rel="noopener">Open check-in log</a>`:"",btn("Start debrief","start"))}`;},
+  ${actions(CONFIG.formUrl?`<a class="btn out" href="${esc(teamsApp(CONFIG.formUrl))}">Open check-in log</a>`:"",btn("Start debrief","start"))}`;},
  p1(){return `<div class="eyebrow">Part 1 of 4 · Review the error</div><h1>What did the audit find?</h1><p class="hint">Select every finding that applies.</p>
   <div class="list">${F.map(f=>`<button class="tile" role="checkbox" aria-checked="${S.sel.has(f.c)}" data-act="find" data-c="${f.c}"><span class="txt"><span class="t">${esc(f.t)}</span><br><span class="s">${esc(f.s)}</span></span><span class="box"></span></button>`).join("")}</div>
   <p class="hint">Ask the RN to read the order back, then describe what was happening at the time.</p>
@@ -267,8 +267,15 @@ const V={
    <dt>Teach-back</dt><dd>5 of 5 items stated</dd>
    <dt>Next step</dt><dd>The manager, ANM or charge nurse audits the RN's next shift with a titratable vasoactive infusion and reports the result back; record it on the completion record's Follow-up audit tab.</dd>
   </dl>
-  ${actions(btn("Start a new debrief","exit",{out:1}),url?`<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Open completion record</a>`:`<span class="hint">Completion record link not set yet (CONFIG.formUrl).</span>`)}`;}
+  ${actions(btn("Start a new debrief","exit",{out:1}),url?`<a class="btn" href="${esc(teamsApp(url))}">Open completion record</a>`:`<span class="hint">Completion record link not set yet (CONFIG.formUrl).</span>`)}
+  ${url?`<p class="hint" style="margin-top:8px">Using Teams in a browser? <a href="${esc(url)}" target="_blank" rel="noopener">Open it in a browser tab instead</a>.</p>`:""}`;}
 };
+
+/* Teams deep links: msteams:/l/... hands the link to the Teams app so it switches tabs in place,
+   instead of the https link opening a browser window and the "open in app" jump page. */
+function teamsApp(u){
+  return u.replace(/^https:\/\/teams\.(cloud\.microsoft|microsoft\.com)\/l\//,"msteams:/l/");
+}
 
 function formLink(){
   if(!CONFIG.formUrl)return "";
