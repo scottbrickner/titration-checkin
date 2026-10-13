@@ -98,6 +98,15 @@ h2{font-size:21px;margin:8px 0 0}
 .record{border:1px solid var(--line);border-left:4px solid var(--cardinal);padding:14px 18px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
 .record .lbl{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .record code{font:15px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--wash);padding:10px 12px;width:100%;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
+.card.primary{border-left-color:var(--gold)}
+.card ul{margin:8px 0 4px;padding-left:22px}
+.card li{font-size:18px;line-height:1.4;margin:4px 0}
+.card .head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card .t{font-weight:700;font-size:19px;margin-top:2px}
+.badge{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--gold);color:var(--ink);padding:3px 8px}
+.date{display:flex;flex-direction:column;gap:6px;max-width:320px}
+.date label{font-weight:700;font-size:18px}
+.date input{font:inherit;font-size:18px;min-height:52px;padding:8px 12px;border:1px solid var(--muted);background:#fff;color:var(--ink)}
 .note{border-left:4px solid var(--gold);padding-left:16px;margin:0;max-width:70ch}
 .start{display:flex;flex-direction:column;gap:10px;max-width:65ch}
 .start ol{margin:0;padding-left:22px}
@@ -145,16 +154,23 @@ const CONFIG = {
 /* =============================================================== */
 
 const F=[
- {c:"A",t:"Titrated outside the order",s:"Early, wrong increment, over maximum, or no order",tab:"Outside the order",
-  p:"Before every change, check the last titration time and current rate against the order. Titrate only within the ordered increment, interval and maximum. Not an immediate risk: hold and reassess at the interval. Immediate risk: emergent titration with provider notification and block charting. Order no longer fits: call for a revised order."},
- {c:"B",t:"Emergent titration not documented",s:"Changed outside the order with no block charting or provider notification",tab:"Emergent not documented",
-  p:"When an immediate risk requires titrating outside the order: titrate as needed, notify the provider as soon as reasonably possible, and document a block: start time, drug, starting and ending rates, maximum rate, end time, parameters, the provider notified, by name, and the provider's response. Start a new block after 4 hours."},
- {c:"C",t:"Measurable criteria missing",s:"No MAP before or 30 minutes after a titration",tab:"Criteria missing",
-  p:"Document MAP immediately before each titration and again 30 minutes after, so the chart shows why each change was made and how the patient responded."}];
-const VB=["Describes what happened and how it differed from the order or policy.","States the correct action for that situation.","States what they will do differently on their next titration."];
+ {c:"A",t:"Titrated outside the order",s:"Early, wrong increment, over maximum, or no order",tab:"Outside the order",name:"Titrate within the order",
+  el:["Before every change, check the last titration time and current rate against the order.",
+      "Titrate only within the ordered increment, interval and maximum, toward the ordered parameter for that infusion (for example MAP, HR or RASS).",
+      "Not an immediate risk: hold and reassess at the next allowed interval.",
+      "Immediate risk: emergent titration with provider notification and block charting.",
+      "Order no longer fits: call for a revised order before reaching the maximum."]},
+ {c:"B",t:"Emergent titration not documented",s:"Changed outside the order with no block charting or provider notification",tab:"Emergent not documented",name:"Document emergent titration",
+  el:["Titrate as needed for the immediate risk.",
+      "Notify the provider as soon as reasonably possible.",
+      "Document a block: start time, drug, starting and ending rates, maximum rate, end time, parameters, the provider notified, by name, and the provider's response.",
+      "Start a new block after 4 hours."]},
+ {c:"C",t:"Measurable criteria missing",s:"Parameter not documented at the time of titration, or not reassessed within 30 minutes",tab:"Criteria missing",name:"Document the parameter",
+  el:["Document the ordered parameter at the time of each titration.",
+      "Reassess and document the parameter no later than 30 minutes after the titration. Sooner is fine; a reassessment more than 30 minutes after is out of compliance."]}];
 const PTS=[
- ["Titrate only within the order: start, maximum, increment, frequency and parameters are limits. (#7)","A"],
- ["Document MAP before every titration and 30 minutes after. (#9–10)","C"],
+ ["Titrate only within the order: start, maximum, increment, frequency and the ordered parameter are limits. (#7)","A"],
+ ["Document the ordered parameter at the time of each titration and reassess it no later than 30 minutes after. (#9–10)","C"],
  ["Outside the order only for an immediate risk or a life-threatening condition: titrate as needed, notify the provider as soon as reasonably possible, block chart. New block after 4 hours. (#13–15)","B"],
  ["During an emergent episode, the block covers titration once the provider is notified; document who was notified and their response. (#13–14)","B"],
  ["Check the last change time before every titration; call early, before the maximum; hand off parameters and last titration time. (#3)",""]];
@@ -162,7 +178,7 @@ const M0={clock:"10:02",map:"62",hr:"102",rate:"8 mcg/min",last:"10:00",next:"10
 const Q=[
  {sc:"It is 10:02. MAP is 62. The patient is alert, skin warm.",q:"What do you do?",o:[
    ["Increase to 8.5 mcg/min now.",0,"Only 2 minutes have passed; the interval is part of the order."],
-   ["Hold, reassess at 10:03, titrate per the order if MAP is still below 65, and document MAP before and 30 minutes after.",1,"Inside the order, and the chart shows why."],
+   ["Hold, reassess at 10:03, titrate per the order if MAP is still below 65, document MAP at the time of titration, and reassess within 30 minutes.",1,"Inside the order, and the chart shows why."],
    ["Call the provider for an emergent titration.",0,"MAP 62 in an alert, warm patient is not an immediate risk."]],
   done:{clock:"10:03",rate:"8.5 mcg/min",last:"10:03",next:"10:06",ok:false}},
  {enter:{clock:"10:02",map:"46",hr:"128",rate:"8 mcg/min",last:"10:00",next:"10:03",status:"",ok:false},
@@ -182,15 +198,19 @@ const Q=[
    ["Keep titrating and call at 30 mcg/min.",0,"At the maximum, the order has run out with no plan."],
    ["Increase by 2 mcg/min each interval.",0,"A larger step needs a revised order."]],
   done:{}}];
-const TB=["Reads the order back: medication, increment, interval, maximum and goal.","States how they check whether the next titration is allowed.","Names the three paths: hold and reassess; immediate risk → titrate, notify, block chart; order no longer fits → call for a revised order.","Lists the block charting elements, including the provider notified and the provider's response, and the 4-hour rule.","States when MAP is documented: before each titration and 30 minutes after."];
+const TB=["Reads the order back: medication, increment, interval, maximum and the ordered parameter goal.","States how they check whether the next titration is allowed.","Names the three paths: hold and reassess; immediate risk → titrate, notify, block chart; order no longer fits → call for a revised order.","Lists the block charting elements, including the provider notified and the provider's response, and the 4-hour rule.","States when the parameter is documented: at the time of each titration, with a reassessment no later than 30 minutes after."];
 const STEPS=[["p1","1  Review the error",0],["prac","Correct practice",1],["p2","2  Policy points",0],["p3","3  Why it matters",0],["case","4  Case",0],["teach","Teach-back",1],["sum","Record completion",0]];
 
 let S;
-function fresh(){S={scr:"home",sel:new Set(),tab:null,v:[0,0,0],q:0,tap:null,att:0,first:null,lock:false,m:{...M0},res:[],t:[0,0,0,0,0],copied:false};}
+function fresh(){S={scr:"home",date:"",sel:new Set(),tab:null,v:[0,0,0],q:0,tap:null,att:0,first:null,lock:false,m:{...M0},res:[],t:[0,0,0,0,0],copied:false};}
 fresh();
 
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const sorted=()=>F.filter(f=>S.sel.has(f.c));
+const pad2=n=>String(n).padStart(2,"0");
+const todayISO=()=>{const d=new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());};
+const dateOK=()=>/^\d{4}-\d{2}-\d{2}$/.test(S.date)&&S.date<=todayISO();
+const fmtDate=s=>{if(!s)return "";const [y,m,d]=s.split("-").map(Number);return ["January","February","March","April","May","June","July","August","September","October","November","December"][m-1]+" "+d+", "+y;};
 const firstTry=()=>S.res.filter(r=>r.correctFirst).length;
 
 function go(scr){S.scr=scr;render();const m=document.getElementById("main");m.scrollTop=0;window.scrollTo(0,0);m.focus({preventScroll:true});}
@@ -214,27 +234,29 @@ const chk=(on,label,act,i)=>`<button class="check" role="checkbox" aria-checked=
 
 const V={
  home(){return `<div class="eyebrow">Targeted re-education debrief</div><h1>Titration Check-In</h1>
-  <p class="lead">For a titration policy fallout found on audit. You and the RN work through four short parts together on this screen, about 10 to 15 minutes. Nothing typed here is saved; you record completion in the completion record app at the end.</p>
+  <p class="lead">For a titration policy fallout found on audit. You and the RN work through four short parts together on this screen, about 10 to 15 minutes. Every check-in covers all three practice points, whatever the finding. Nothing typed here is saved; you record completion in the completion record app at the end.</p>
   <div class="start"><h2>Before you start</h2><ol>
    <li>Have the RN pull up the order involved in the finding.</li>
-   <li>Know which audit finding or findings you're addressing.</li>
+   <li>Have the incident date from the audit tool, and know which finding prompted the check-in.</li>
    <li>Have the Debrief Completion Record tab ready to log the check-in when you finish.</li></ol>
   <p class="note">No patient information goes on this page or in the completion record. The case patient is fictional.</p></div>
   ${actions(CONFIG.formUrl?`<a class="btn out" href="${esc(teamsApp(CONFIG.formUrl))}">Open check-in log</a>`:"",btn("Start debrief","start"))}`;},
- p1(){return `<div class="eyebrow">Part 1 of 4 · Review the error</div><h1>What did the audit find?</h1><p class="hint">Select every finding that applies.</p>
+ p1(){return `<div class="eyebrow">Part 1 of 4 · Review the error</div><h1>What did the audit find?</h1>
+  <div class="date"><label for="incdate">Incident date</label><input type="date" id="incdate" value="${esc(S.date)}" max="${todayISO()}" required>
+   <span class="hint">The date the audit found the RN out of compliance, from the audit tool.</span></div>
+  <h2>Primary concern <span class="hint" style="font-weight:400">(optional)</span></h2>
+  <p class="hint">All three points are reviewed with every RN. Mark the finding or findings that prompted this check-in to highlight them.</p>
   <div class="list">${F.map(f=>`<button class="tile" role="checkbox" aria-checked="${S.sel.has(f.c)}" data-act="find" data-c="${f.c}"><span class="txt"><span class="t">${esc(f.t)}</span><br><span class="s">${esc(f.s)}</span></span><span class="box"></span></button>`).join("")}</div>
   <p class="hint">Ask the RN to read the order back, then describe what was happening at the time.</p>
-  ${actions(btn("Next","toPrac",{dis:!S.sel.size}))}`;},
- prac(){const sel=sorted();if(!sel.find(f=>f.c===S.tab))S.tab=sel[0].c;const f=F.find(x=>x.c===S.tab);
-  return `<div class="eyebrow">Part 1 of 4 · Review the error</div><h1>What should have happened</h1>
-  ${sel.length>1?`<div class="tabs" role="tablist">${sel.map(x=>`<button role="tab" aria-selected="${x.c===S.tab}" data-act="tab" data-c="${x.c}">${esc(x.tab)}</button>`).join("")}</div>`:""}
-  <div class="card" role="tabpanel"><div class="lbl">Correct practice — ${esc(f.t)}</div><p>${esc(f.p)}</p></div>
-  <h2>Verbalization of understanding</h2><p class="hint">Tap each item as the RN states it in their own words. These cover every finding selected.</p>
-  <div>${VB.map((t,i)=>chk(S.v[i],t,"verb",i)).join("")}</div>
+  ${actions(btn("Next","toPrac",{dis:!dateOK()}))}`;},
+ prac(){return `<div class="eyebrow">Part 1 of 4 · Review the error</div><h1>Correct practice: all three points</h1>
+  <p class="hint">Review every element with the RN. Tap the check when the RN states that point's correct practice in their own words.</p>
+  ${F.map((f,i)=>{const pri=S.sel.has(f.c);return `<div class="card${pri?" primary":""}"><div class="head"><div><div class="lbl">Point ${i+1} of 3</div><div class="t">${esc(f.name)}</div></div>${pri?'<span class="badge">Primary concern</span>':""}</div>
+   <ul>${f.el.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>${chk(S.v[i],"RN states the correct practice for this point in their own words.","verb",i)}</div>`;}).join("")}
   ${actions(btn("Back","toP1",{out:1}),btn("Next","toP2",{dis:S.v.some(x=>!x)}))}`;},
  p2(){return `<div class="eyebrow">Part 2 of 4 · Policy points</div><h1>Five points from CP 4-156</h1>
   <ol class="points">${PTS.map(p=>`<li class="${p[1]&&[...S.sel].some(c=>p[1].includes(c))?"hi":""}"><span>${esc(p[0])}</span></li>`).join("")}</ol>
-  <p class="hint">Gold marks the points tied to today's finding.</p>
+  ${S.sel.size?'<p class="hint">Gold marks the points tied to the primary concern.</p>':'<p class="hint">All five points apply to every check-in.</p>'}
   ${actions(btn("Back","toPrac",{out:1}),btn("Next","toP3"))}`;},
  p3(){return `<div class="eyebrow">Part 3 of 4 · Why it matters</div><h1>Why one minute matters</h1>
   <p class="callout">Small deviations that cause no harm tend to become the normal way of working. Workarounds become so routine they are no longer seen as risks. Every titration either reinforces the order or wears it down.</p>
@@ -245,7 +267,7 @@ const V={
   const opts=q.o.map((o,i)=>{const ok=S.lock&&o[1];return `<button class="opt${ok?" ok":""}" data-act="opt" data-i="${i}"${S.lock?" disabled":""}>${esc(o[0])}</button>${S.tap===i?`<div class="fb ${o[1]?"yes":"no"}" role="status">${esc(o[2])}</div>`:""}`;}).join("");
   return `<div class="eyebrow">Part 4 of 4 · Case · Question ${S.q+1} of 4</div>
   <div class="case"><div class="rail">
-   <div class="panel"><div class="lbl">Active order</div><p class="order">Norepinephrine 8 mg/250 mL (32 mcg/mL). Titrate by 0.5 mcg/min every 3 minutes to maintain MAP &gt; 65 mmHg. Maximum 30 mcg/min.</p></div>
+   <div class="panel"><div class="lbl">Active order</div><p class="order">Norepinephrine 8 mg/250 mL (32 mcg/mL). Titrate by 0.5 mcg/min every 3 minutes to maintain MAP &gt; 65 mmHg. Maximum 30 mcg/min.</p><p class="hint" style="font-size:14px;margin-top:8px">The same rules apply to any titrated infusion and its ordered parameter.</p></div>
    <div class="panel"><div class="lbl">Patient monitor</div><div class="status">${esc(m.status)}</div>
     <div class="vitals">${[["Clock",m.clock],["MAP (mmHg)",m.map],["HR",m.hr],["Current rate",m.rate],["Last titration",m.last],["Next allowed",m.next]].map(x=>`<div><div class="k">${x[0]}</div><div class="v">${esc(x[1])}</div></div>`).join("")}</div>
     <div class="k" style="margin-top:18px;font-size:14px;color:var(--muted)">Next titration allowed</div><div class="bar${m.ok?" ok":""}"></div></div>
@@ -261,8 +283,10 @@ const V={
   <div class="record"><div class="lbl">Debrief record</div><code id="rec">${esc(recordText())}</code>
    <button class="btn" data-act="copy">${S.copied?"Copied":"Copy debrief record"}</button></div>
   <dl class="summary">
-   <dt>Findings reviewed</dt><dd>${sorted().map(f=>esc(f.t)).join("<br>")}</dd>
-   <dt>Verbalization</dt><dd>3 of 3 items stated</dd>
+   <dt>Incident date</dt><dd>${esc(fmtDate(S.date))}</dd>
+   <dt>Points reviewed</dt><dd>All three: ${F.map(f=>esc(f.name)).join("; ")}</dd>
+   <dt>Primary concern</dt><dd>${S.sel.size?sorted().map(f=>esc(f.t)).join("<br>"):"None marked"}</dd>
+   <dt>Correct practice stated</dt><dd>3 of 3 points</dd>
    <dt>Case</dt><dd>${n} of 4 correct on the first try<br><span class="hint">${esc(detail)}</span></dd>
    <dt>Teach-back</dt><dd>5 of 5 items stated</dd>
    <dt>Next step</dt><dd>The RN's manager receives an email that the check-in is complete and follows up with the RN.</dd>
@@ -291,11 +315,11 @@ function recordText(){
   const d=S.finished||new Date(),p=n=>String(n).padStart(2,"0");
   const stamp=d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes());
   const tries=[1,2,3,4].map(n=>{const r=S.res.find(x=>x.q===n);return "Q"+n+"Tries="+(r?r.att:"")});
-  return ["TCI-V1","Findings="+sorted().map(f=>f.tab).join("; "),"Verbal=3/3","CaseFirstTry="+firstTry()+"/4",...tries,"TeachBack=5/5","Finished="+stamp].join(" | ");
+  return ["TCI-V1.1","IncidentDate="+S.date,"Findings="+(S.sel.size?sorted().map(f=>f.tab).join("; "):"None marked"),"Verbal=3/3","CaseFirstTry="+firstTry()+"/4",...tries,"TeachBack=5/5","Finished="+stamp].join(" | ");
 }
 
 function render(){
-  if(["prac","p2","p3"].includes(S.scr)&&!S.sel.size)S.scr="p1";
+  if(["prac","p2","p3","case","teach","sum"].includes(S.scr)&&!dateOK())S.scr="p1";
   sidebar();
   document.getElementById("main").innerHTML=`<div class="wrap">${V[S.scr]()}</div>`;
   document.title=S.scr==="home"?"Titration Check-In":"Titration Check-In · "+(STEPS.find(s=>s[0]===S.scr)||["","Debrief"])[1].replace(/^\d\s+/,"");
@@ -310,9 +334,9 @@ document.addEventListener("click",e=>{
   switch(a){
     case "start":fresh();go("p1");break;
     case "exit":fresh();go("home");break;
-    case "find":{const c=el.dataset.c;S.sel.has(c)?S.sel.delete(c):S.sel.add(c);S.v=[0,0,0];render();break;}
+    case "find":{const c=el.dataset.c;S.sel.has(c)?S.sel.delete(c):S.sel.add(c);render();break;}
     case "toP1":go("p1");break;
-    case "toPrac":S.tab=null;go("prac");break;
+    case "toPrac":if(dateOK())go("prac");break;
     case "tab":S.tab=el.dataset.c;render();break;
     case "verb":S.v[i]=S.v[i]?0:1;render();break;
     case "toP2":go("p2");break;
@@ -328,6 +352,8 @@ document.addEventListener("click",e=>{
       try{navigator.clipboard.writeText(t).then(ok,()=>fallbackCopy(t,ok));}catch(_){fallbackCopy(t,ok);}break;}
   }
 });
+document.addEventListener("change",e=>{if(e.target.id==="incdate"){S.date=e.target.value;const b=document.querySelector('[data-act="toPrac"]');if(b)b.disabled=!dateOK();}});
+document.addEventListener("input",e=>{if(e.target.id==="incdate"){S.date=e.target.value;const b=document.querySelector('[data-act="toPrac"]');if(b)b.disabled=!dateOK();}});
 document.addEventListener("keydown",e=>{const g=e.target.closest&&e.target.closest("[data-go]");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();go(g.dataset.go);}});
 function fallbackCopy(t,ok){const ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok();}catch(_){}ta.remove();}
 
