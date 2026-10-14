@@ -149,7 +149,7 @@ const CONFIG = {
   // Optional, Microsoft Forms only (unused with the Power App): pre-fill question ids.
   // then put each question's id (the part after "r" in r1234abcd=) here. Leave "" to skip a question.
   prefill: { findingA: "", findingB: "", findingC: "", verbalization: "", caseScore: "", teachBack: "" },
-  version: "Version 1 · Vasoactive infusions"
+  version: "Version 1.2 · Titratable infusions"
 };
 /* =============================================================== */
 
@@ -167,13 +167,23 @@ const F=[
       "Start a new block after 4 hours."]},
  {c:"C",t:"Measurable criteria missing",s:"Parameter not documented at the time of titration, or not reassessed within 30 minutes",tab:"Criteria missing",name:"Document the parameter",
   el:["Document the ordered parameter at the time of each titration.",
-      "Reassess and document the parameter no later than 30 minutes after the titration. Sooner is fine; a reassessment more than 30 minutes after is out of compliance."]}];
+      "Reassess and document the parameter no later than 30 minutes after the titration. Sooner is fine; a reassessment more than 30 minutes after is out of compliance."]},
+ {c:"D",t:"Propofol infusion not managed per policy",s:"Not in the orange lock box, not on port-less tubing, or not titrated per order",tab:"Propofol",name:"Propofol infusions",prop:true,
+  el:["Titrate within the order to the ordered RASS goal. Points 1 to 3 apply: emergent titration needs provider notification and block charting, and RASS is documented at the time of titration and reassessed within 30 minutes.",
+      "Secure the continuous infusion in the infusion pump, locked in the orange lock box. (CP 4-113)",
+      "Infuse using port-less tubing. (CP 4-113)",
+      "During an SAT, turn propofol off so the patient can reach alertness. Analgesics continue at the lowest effective dose unless a provider order says to hold them. (CP 3-162 #4, #12)",
+      "If the SAT fails, restart sedation at half the dose and titrate to the ordered RASS goal. (CP 3-162 #3)",
+      "Any exception to the SAT-SBT protocol needs a provider order; withholding the SAT needs a daily order. (CP 3-162 #12)"]}];
+const pts=()=>F.filter(f=>!f.prop||S.prop);
 const PTS=[
  ["Titrate only within the order: start, maximum, increment, frequency and the ordered parameter are limits. (#7)","A"],
  ["Document the ordered parameter at the time of each titration and reassess it no later than 30 minutes after. (#9–10)","C"],
  ["Outside the order only for an immediate risk or a life-threatening condition: titrate as needed, notify the provider as soon as reasonably possible, block chart. New block after 4 hours. (#13–15)","B"],
  ["During an emergent episode, the block covers titration once the provider is notified; document who was notified and their response. (#13–14)","B"],
- ["Check the last change time before every titration; call early, before the maximum; hand off parameters and last titration time. (#3)",""]];
+ ["Check the last change time before every titration; call early, before the maximum; hand off parameters and last titration time. (#3)",""],
+ ["Propofol: lock the continuous infusion in the orange lock box and use port-less tubing (CP 4-113). Turn it off during an SAT; if the SAT fails, restart at half the dose and titrate to the ordered RASS goal (CP 3-162).","D"]];
+const ptsList=()=>PTS.filter(p=>p[1]!=="D"||S.prop);
 const M0={clock:"10:02",map:"62",hr:"102",rate:"8 mcg/min",last:"10:00",next:"10:03",status:"",ok:false};
 const Q=[
  {sc:"It is 10:02. MAP is 62. The patient is alert, skin warm.",q:"What do you do?",o:[
@@ -198,33 +208,69 @@ const Q=[
    ["Keep titrating and call at 30 mcg/min.",0,"At the maximum, the order has run out with no plan."],
    ["Increase by 2 mcg/min each interval.",0,"A larger step needs a revised order."]],
   done:{}}];
-const TB=["Reads the order back: medication, increment, interval, maximum and the ordered parameter goal.","States how they check whether the next titration is allowed.","Names the three paths: hold and reassess; immediate risk → titrate, notify, block chart; order no longer fits → call for a revised order.","Lists the block charting elements, including the provider notified and the provider's response, and the 4-hour rule.","States when the parameter is documented: at the time of each titration, with a reassessment no later than 30 minutes after."];
-const STEPS=[["p1","1  Review the error",0],["prac","Correct practice",1],["p2","2  Policy points",0],["p3","3  Why it matters",0],["case","4  Case",0],["teach","Teach-back",1],["sum","Record completion",0]];
+const PM0={clock:"14:02",rass:"+1",rate:"20 mcg/kg/min",last:"13:55",next:"14:05",setup:"Not checked",status:"",ok:false};
+const PQ=[
+ {sc:"You take over a patient on propofol at 20 mcg/kg/min. You start with a safety check at the pump.",q:"What must you see?",o:[
+   ["The infusion running through the pump, locked in the orange lock box, on port-less tubing.",1,"CP 4-113: continuous controlled-substance infusions are locked in the orange lock box and infused with port-less tubing."],
+   ["The pump locked in the orange lock box; standard tubing is fine if the ports are capped.",0,"Port-less tubing is required. A capped port is still an access point."],
+   ["Either the lock box or port-less tubing; one is enough.",0,"Both are required, every time."]],
+  done:{setup:"Locked, port-less"}},
+ {sc:"14:02. RASS +1: restless and anxious, movements not aggressive. Last titration was at 13:55.",q:"What do you do?",o:[
+   ["Increase by 5 mcg/kg/min now.",0,"Only 7 minutes have passed. The 10-minute interval is part of the order."],
+   ["Hold, reassess at 14:05; if RASS is still above goal, increase by 5 mcg/kg/min, document RASS at the time of titration, and reassess within 30 minutes.",1,"Inside the order, toward the ordered RASS goal, and the chart shows why."],
+   ["Wait until 14:05, then increase by 10 mcg/kg/min to catch up.",0,"A larger step than ordered needs a revised order."]],
+  done:{clock:"14:05",rate:"25 mcg/kg/min",last:"14:05",next:"14:15",status:"",ok:false}},
+ {enter:{clock:"06:00",rass:"-1",rate:"25 mcg/kg/min",last:"02:10",next:"Per order",setup:"Locked, port-less",status:"SAT safety screen passed",ok:true},
+  sc:"Next morning, 06:00. The SAT safety screen passes. A fentanyl infusion is also running for pain.",q:"What happens to the infusions?",o:[
+   ["Turn propofol off. Continue fentanyl at the lowest effective dose unless a provider order says to hold it.",1,"CP 3-162 #4 and #12: sedatives go off so the patient can reach alertness; analgesics continue unless an order says otherwise."],
+   ["Cut propofol in half and turn off fentanyl.",0,"The SAT turns sedation off, not down. Holding the analgesic needs a provider order."],
+   ["Turn off both propofol and fentanyl.",0,"Analgesics continue at the lowest effective dose unless a provider order says to hold them."]],
+  done:{rate:"Off",last:"06:00",next:"During SAT",status:"SAT in progress"}},
+ {enter:{clock:"06:20",rass:"+2",rate:"Off",last:"06:00",next:"During SAT",setup:"Locked, port-less",status:"SAT failure criteria met",ok:true},
+  sc:"06:20. The patient woke and followed commands, but is now RASS +2 with RR 36. SAT failure criteria are met.",q:"How do you restart propofol?",o:[
+   ["Restart at the previous dose, 25 mcg/kg/min.",0,"CP 3-162 #3: restart at half the dose, then titrate."],
+   ["Restart at half the previous dose, 12.5 mcg/kg/min, then titrate to the ordered RASS goal.",1,"CP 3-162 #3. Titration after restart follows the order: interval, increment, RASS documentation."],
+   ["Restart at 5 mcg/kg/min and call for a new order before titrating.",0,"The restart dose is half the previous dose, and the existing order covers titration to the RASS goal."]],
+  done:{rate:"12.5 mcg/kg/min",last:"06:20",next:"06:30",status:"SAT failed; restarted at half dose",ok:false}}];
+const CASES={
+ v:{Q:Q,M0:M0,title:"Case",order:"Norepinephrine 8 mg/250 mL (32 mcg/mL). Titrate by 0.5 mcg/min every 3 minutes to maintain MAP &gt; 65 mmHg. Maximum 30 mcg/min.",
+    note:"The same rules apply to any titrated infusion and its ordered parameter.",
+    f:[["Clock","clock"],["MAP (mmHg)","map"],["HR","hr"],["Current rate","rate"],["Last titration","last"],["Next allowed","next"]]},
+ p:{Q:PQ,M0:PM0,title:"Propofol case",order:"Propofol 1000 mg/100 mL (10 mg/mL). Titrate by 5 mcg/kg/min every 10 minutes to a RASS goal of 0 to &minus;1. Maximum 100 mcg/kg/min.",
+    note:"Built on CP 4-156 Attachment B defaults (every 5 to 10 minutes; this order specifies 10). Fictional patient.",
+    f:[["Clock","clock"],["RASS","rass"],["Current rate","rate"],["Last titration","last"],["Next allowed","next"],["Pump","setup"]]}};
+const TB=["Reads the order back: medication, increment, interval, maximum and the ordered parameter goal.","States how they check whether the next titration is allowed.","Names the three paths: hold and reassess; immediate risk → titrate, notify, block chart; order no longer fits → call for a revised order.","Lists the block charting elements, including the provider notified and the provider's response, and the 4-hour rule.","States when the parameter is documented: at the time of each titration, with a reassessment no later than 30 minutes after.",
+ "For propofol: states the orange lock box and port-less tubing requirements, and how propofol is handled during an SAT and after a failed SAT."];
+const tbList=()=>TB.slice(0,S.prop?6:5);
+const STEPS0=[["p1","1  Review the error",0],["prac","Correct practice",1],["p2","2  Policy points",0],["p3","3  Why it matters",0],["case","4  Case",0],["pcase","Propofol case",1],["teach","Teach-back",1],["sum","Record completion",0]];
+const steps=()=>STEPS0.filter(s=>s[0]!=="pcase"||S.prop);
 
 let S;
-function fresh(){S={scr:"home",date:"",sel:new Set(),tab:null,v:[0,0,0],q:0,tap:null,att:0,first:null,lock:false,m:{...M0},res:[],t:[0,0,0,0,0],copied:false};}
+function fresh(){S={scr:"home",date:"",inf:"",prop:false,ck:"v",resV:[],resP:[],sel:new Set(),tab:null,v:[0,0,0,0],q:0,tap:null,att:0,first:null,lock:false,m:{...M0},res:[],t:[0,0,0,0,0,0],copied:false};}
 fresh();
 
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const sorted=()=>F.filter(f=>S.sel.has(f.c));
+const sorted=()=>pts().filter(f=>S.sel.has(f.c));
+const nWord=n=>["zero","one","two","three","four","five","six"][n];
 const pad2=n=>String(n).padStart(2,"0");
 const todayISO=()=>{const d=new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());};
+const p1OK=()=>dateOK()&&!!S.inf;
 const dateOK=()=>/^\d{4}-\d{2}-\d{2}$/.test(S.date)&&S.date<=todayISO();
 const fmtDate=s=>{if(!s)return "";const [y,m,d]=s.split("-").map(Number);return ["January","February","March","April","May","June","July","August","September","October","November","December"][m-1]+" "+d+", "+y;};
-const firstTry=()=>S.res.filter(r=>r.correctFirst).length;
+const firstTry=(r=S.resV)=>r.filter(x=>x.correctFirst).length;
 
 function go(scr){S.scr=scr;render();const m=document.getElementById("main");m.scrollTop=0;window.scrollTo(0,0);m.focus({preventScroll:true});}
 
 function sidebar(){
-  const idx=STEPS.findIndex(s=>s[0]===S.scr);
+  const idx=steps().findIndex(s=>s[0]===S.scr);
   const back=["p1","prac","p2","p3"];
   let h=`<div class="name">Titration Check-In</div><div class="ver">${esc(CONFIG.version)}</div><ol class="steps">`;
-  STEPS.forEach((s,i)=>{const st=S.scr==="home"?"":i<idx?"done":i===idx?"cur":"";
+  steps().forEach((s,i)=>{const st=S.scr==="home"?"":i<idx?"done":i===idx?"cur":"";
     const link=st==="done"&&back.includes(s[0]);
     h+=`<li class="${st}${s[2]?" sub":""}${link?" link":""}" ${link?`data-go="${s[0]}" role="button" tabindex="0"`:""} ${st==="cur"?'aria-current="step"':""}><span class="dot"></span>${esc(s[1])}</li>`;});
   h+=`</ol><div class="foot">${S.scr!=="home"?'<button data-act="exit">Start over</button>':""}</div>`;
   document.getElementById("side").innerHTML=h;
-  const cur=STEPS.find(s=>s[0]===S.scr);
+  const cur=steps().find(s=>s[0]===S.scr);
   document.getElementById("top").innerHTML=`<b>Titration Check-In</b><span>${cur?esc(cur[1].replace(/^\d\s+/,"")):"Debrief guide"}</span>`;
 }
 
@@ -234,7 +280,7 @@ const chk=(on,label,act,i)=>`<button class="check" role="checkbox" aria-checked=
 
 const V={
  home(){return `<div class="eyebrow">Targeted re-education debrief</div><h1>Titration Check-In</h1>
-  <p class="lead">For a titration policy fallout found on audit. You and the RN work through four short parts together on this screen, about 10 to 15 minutes. Every check-in covers all three practice points, whatever the finding. Nothing typed here is saved; you record completion in the completion record app at the end.</p>
+  <p class="lead">For a titration policy fallout found on audit. You and the RN work through four short parts together on this screen, about 10 to 15 minutes. Every check-in covers all three titration practice points, whatever the finding, plus a propofol point and a propofol case when propofol was involved. Nothing typed here is saved; you record completion in the completion record app at the end.</p>
   <div class="start"><h2>Before you start</h2><ol>
    <li>Have the RN pull up the order involved in the finding.</li>
    <li>Have the incident date from the audit tool, and know which finding prompted the check-in.</li>
@@ -244,39 +290,47 @@ const V={
  p1(){return `<div class="eyebrow">Part 1 of 4 · Review the error</div><h1>What did the audit find?</h1>
   <div class="date"><label for="incdate">Incident date</label><input type="date" id="incdate" value="${esc(S.date)}" max="${todayISO()}" required>
    <span class="hint">The date the audit found the RN out of compliance, from the audit tool.</span></div>
+  <h2>Infusions involved</h2>
+  <div class="list" role="radiogroup" aria-label="Infusions involved">
+   <button class="tile" role="radio" aria-checked="${S.inf==="titr"}" data-act="inf" data-c="titr"><span class="txt"><span class="t">Vasoactive or other titratable infusions</span><br><span class="s">Reviews the three titration practice points and the titration case</span></span><span class="box"></span></button>
+   <button class="tile" role="radio" aria-checked="${S.inf==="prop"}" data-act="inf" data-c="prop"><span class="txt"><span class="t">Propofol, with or without other titratable infusions</span><br><span class="s">Reviews the three titration points plus the propofol point, and adds a propofol case</span></span><span class="box"></span></button>
+  </div>
   <h2>Primary concern <span class="hint" style="font-weight:400">(optional)</span></h2>
-  <p class="hint">All three points are reviewed with every RN. Mark the finding or findings that prompted this check-in to highlight them.</p>
-  <div class="list">${F.map(f=>`<button class="tile" role="checkbox" aria-checked="${S.sel.has(f.c)}" data-act="find" data-c="${f.c}"><span class="txt"><span class="t">${esc(f.t)}</span><br><span class="s">${esc(f.s)}</span></span><span class="box"></span></button>`).join("")}</div>
+  <p class="hint">Every point shown is reviewed with every RN. Mark the finding or findings that prompted this check-in to highlight them.</p>
+  <div class="list">${pts().map(f=>`<button class="tile" role="checkbox" aria-checked="${S.sel.has(f.c)}" data-act="find" data-c="${f.c}"><span class="txt"><span class="t">${esc(f.t)}</span><br><span class="s">${esc(f.s)}</span></span><span class="box"></span></button>`).join("")}</div>
   <p class="hint">Ask the RN to read the order back, then describe what was happening at the time.</p>
-  ${actions(btn("Next","toPrac",{dis:!dateOK()}))}`;},
- prac(){return `<div class="eyebrow">Part 1 of 4 · Review the error</div><h1>Correct practice: all three points</h1>
+  ${actions(btn("Next","toPrac",{dis:!p1OK()}))}`;},
+ prac(){return `<div class="eyebrow">Part 1 of 4 · Review the error</div><h1>Correct practice: all ${nWord(pts().length)} points</h1>
   <p class="hint">Review every element with the RN. Tap the check when the RN states that point's correct practice in their own words.</p>
-  ${F.map((f,i)=>{const pri=S.sel.has(f.c);return `<div class="card${pri?" primary":""}"><div class="head"><div><div class="lbl">Point ${i+1} of 3</div><div class="t">${esc(f.name)}</div></div>${pri?'<span class="badge">Primary concern</span>':""}</div>
+  ${pts().map((f,i)=>{const pri=S.sel.has(f.c);return `<div class="card${pri?" primary":""}"><div class="head"><div><div class="lbl">Point ${i+1} of ${pts().length}</div><div class="t">${esc(f.name)}</div></div>${pri?'<span class="badge">Primary concern</span>':""}</div>
    <ul>${f.el.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>${chk(S.v[i],"RN states the correct practice for this point in their own words.","verb",i)}</div>`;}).join("")}
-  ${actions(btn("Back","toP1",{out:1}),btn("Next","toP2",{dis:S.v.some(x=>!x)}))}`;},
- p2(){return `<div class="eyebrow">Part 2 of 4 · Policy points</div><h1>Five points from CP 4-156</h1>
-  <ol class="points">${PTS.map(p=>`<li class="${p[1]&&[...S.sel].some(c=>p[1].includes(c))?"hi":""}"><span>${esc(p[0])}</span></li>`).join("")}</ol>
-  ${S.sel.size?'<p class="hint">Gold marks the points tied to the primary concern.</p>':'<p class="hint">All five points apply to every check-in.</p>'}
+  ${actions(btn("Back","toP1",{out:1}),btn("Next","toP2",{dis:S.v.slice(0,pts().length).some(x=>!x)}))}`;},
+ p2(){return `<div class="eyebrow">Part 2 of 4 · Policy points</div><h1>${S.prop?"Six":"Five"} policy points</h1>
+  <p class="hint"><b>Reference:</b> CP 4-156, Administration and Titration of Intravenous Medications${S.prop?"; CP 4-113, Controlled Substances; CP 3-162, Awakening and Breathing Trials":""}. Numbers in parentheses are CP 4-156 items.</p>
+  <ol class="points">${ptsList().map(p=>`<li class="${p[1]&&[...S.sel].some(c=>p[1].includes(c))?"hi":""}"><span>${esc(p[0])}</span></li>`).join("")}</ol>
+  ${S.sel.size?'<p class="hint">Gold marks the points tied to the primary concern.</p>':'<p class="hint">Every point shown applies to this check-in.</p>'}
   ${actions(btn("Back","toPrac",{out:1}),btn("Next","toP3"))}`;},
  p3(){return `<div class="eyebrow">Part 3 of 4 · Why it matters</div><h1>Why one minute matters</h1>
   <p class="callout">Small deviations that cause no harm tend to become the normal way of working. Workarounds become so routine they are no longer seen as risks. Every titration either reinforces the order or wears it down.</p>
   <p class="ask">Ask: Where have you seen a small shortcut like this become normal?</p>
   <p class="cite">Trepanier, S. (2026). Overcoming the normalization of deviance in clinical practice. <i>The Journal of Continuing Education in Nursing, 57</i>(4), 150–151. https://doi.org/10.3928/00220124-20260304-02</p>
   ${actions(btn("Back","toP2",{out:1}),btn("Continue to case","toCase"))}`;},
- case(){const q=Q[S.q],m=S.m;
+ case(){const C=CASES[S.ck],q=C.Q[S.q],m=S.m,last=S.q>=C.Q.length-1;
   const opts=q.o.map((o,i)=>{const ok=S.lock&&o[1];return `<button class="opt${ok?" ok":""}" data-act="opt" data-i="${i}"${S.lock?" disabled":""}>${esc(o[0])}</button>${S.tap===i?`<div class="fb ${o[1]?"yes":"no"}" role="status">${esc(o[2])}</div>`:""}`;}).join("");
-  return `<div class="eyebrow">Part 4 of 4 · Case · Question ${S.q+1} of 4</div>
+  const nextLbl=!last?"Next question":(S.ck==="v"&&S.prop?"Propofol case":"Teach-back");
+  return `<div class="eyebrow">Part 4 of 4 · ${C.title} · Question ${S.q+1} of ${C.Q.length}</div>
   <div class="case"><div class="rail">
-   <div class="panel"><div class="lbl">Active order</div><p class="order">Norepinephrine 8 mg/250 mL (32 mcg/mL). Titrate by 0.5 mcg/min every 3 minutes to maintain MAP &gt; 65 mmHg. Maximum 30 mcg/min.</p><p class="hint" style="font-size:14px;margin-top:8px">The same rules apply to any titrated infusion and its ordered parameter.</p></div>
+   <div class="panel"><div class="lbl">Active order</div><p class="order">${C.order}</p><p class="hint" style="font-size:14px;margin-top:8px">${esc(C.note)}</p></div>
    <div class="panel"><div class="lbl">Patient monitor</div><div class="status">${esc(m.status)}</div>
-    <div class="vitals">${[["Clock",m.clock],["MAP (mmHg)",m.map],["HR",m.hr],["Current rate",m.rate],["Last titration",m.last],["Next allowed",m.next]].map(x=>`<div><div class="k">${x[0]}</div><div class="v">${esc(x[1])}</div></div>`).join("")}</div>
+    <div class="vitals">${C.f.map(x=>`<div><div class="k">${x[0]}</div><div class="v"${x[1]==="setup"?' style="font-size:16px;white-space:normal"':""}>${esc(m[x[1]])}</div></div>`).join("")}</div>
     <div class="k" style="margin-top:18px;font-size:14px;color:var(--muted)">Next titration allowed</div><div class="bar${m.ok?" ok":""}"></div></div>
   </div><div class="q"><p class="scenario">${esc(q.sc)}</p><p class="prompt">${esc(q.q)}</p>${opts}</div></div>
-  ${actions(btn(S.q<3?"Next question":"Teach-back","nextQ",{dis:!S.lock}))}`;},
+  ${actions(btn(nextLbl,"nextQ",{dis:!S.lock}))}`;},
+ pcase(){return V.case();},
  teach(){return `<div class="eyebrow">Part 4 of 4 · Teach-back</div><h1>Teach-back</h1><p class="hint">Tap each item as the RN states it.</p>
-  <div>${TB.map((t,i)=>chk(S.t[i],t,"tb",i)).join("")}</div>
-  ${actions(btn("Restart case","restartCase",{out:1}),btn("Finish","toSum",{dis:S.t.some(x=>!x)}))}`;},
- sum(){const n=firstTry();const detail=S.res.map(r=>`Q${r.q} ${r.correctFirst?"first try":r.att+" attempts"}`).join(" · ");
+  <div>${tbList().map((t,i)=>chk(S.t[i],t,"tb",i)).join("")}</div>
+  ${actions(btn("Restart case","restartCase",{out:1}),btn("Finish","toSum",{dis:S.t.slice(0,tbList().length).some(x=>!x)}))}`;},
+ sum(){const n=firstTry();const np=firstTry(S.resP);const detailP=S.resP.map(r=>`Q${r.q} ${r.correctFirst?"first try":r.att+" attempts"}`).join(" · ");const detail=S.resV.map(r=>`Q${r.q} ${r.correctFirst?"first try":r.att+" attempts"}`).join(" · ");
   const url=formLink();
   return `<div class="eyebrow">Record completion</div><h1>Debrief complete</h1>
   <p class="lead">Copy the debrief record, open the Debrief Completion Record, pick the RN, paste the record and save. The RN's manager is emailed automatically.</p>
@@ -284,11 +338,13 @@ const V={
    <button class="btn" data-act="copy">${S.copied?"Copied":"Copy debrief record"}</button></div>
   <dl class="summary">
    <dt>Incident date</dt><dd>${esc(fmtDate(S.date))}</dd>
-   <dt>Points reviewed</dt><dd>All three: ${F.map(f=>esc(f.name)).join("; ")}</dd>
+   <dt>Infusions</dt><dd>${S.prop?"Propofol and other titratable infusions":"Vasoactive or other titratable infusions"}</dd>
+   <dt>Points reviewed</dt><dd>All ${nWord(pts().length)}: ${pts().map(f=>esc(f.name)).join("; ")}</dd>
    <dt>Primary concern</dt><dd>${S.sel.size?sorted().map(f=>esc(f.t)).join("<br>"):"None marked"}</dd>
-   <dt>Correct practice stated</dt><dd>3 of 3 points</dd>
+   <dt>Correct practice stated</dt><dd>${pts().length} of ${pts().length} points</dd>
    <dt>Case</dt><dd>${n} of 4 correct on the first try<br><span class="hint">${esc(detail)}</span></dd>
-   <dt>Teach-back</dt><dd>5 of 5 items stated</dd>
+   ${S.prop?`<dt>Propofol case</dt><dd>${np} of ${PQ.length} correct on the first try<br><span class="hint">${esc(detailP)}</span></dd>`:""}
+   <dt>Teach-back</dt><dd>${tbList().length} of ${tbList().length} items stated</dd>
    <dt>Next step</dt><dd>The RN's manager receives an email that the check-in is complete and follows up with the RN.</dd>
   </dl>
   ${actions(btn("Start a new debrief","exit",{out:1}),url?`<a class="btn" href="${esc(teamsApp(url))}">Open completion record</a>`:`<span class="hint">Completion record link not set yet (CONFIG.formUrl).</span>`)}
@@ -314,18 +370,20 @@ function formLink(){
 function recordText(){
   const d=S.finished||new Date(),p=n=>String(n).padStart(2,"0");
   const stamp=d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes());
-  const tries=[1,2,3,4].map(n=>{const r=S.res.find(x=>x.q===n);return "Q"+n+"Tries="+(r?r.att:"")});
-  return ["TCI-V1.1","IncidentDate="+S.date,"Findings="+(S.sel.size?sorted().map(f=>f.tab).join("; "):"None marked"),"Verbal=3/3","CaseFirstTry="+firstTry()+"/4",...tries,"TeachBack=5/5","Finished="+stamp].join(" | ");
+  const tries=[1,2,3,4].map(n=>{const r=S.resV.find(x=>x.q===n);return "Q"+n+"Tries="+(r?r.att:"")});
+  const ptries=S.prop?["PropCaseFirstTry="+firstTry(S.resP)+"/"+PQ.length,"PropTries="+[1,2,3,4].map(n=>{const r=S.resP.find(x=>x.q===n);return r?r.att:""}).join(",")]:[];
+  return ["TCI-V1.2","IncidentDate="+S.date,"Topics="+(S.prop?"Titratable; Propofol":"Titratable"),"Findings="+(S.sel.size?sorted().map(f=>f.tab).join("; "):"None marked"),"Verbal="+pts().length+"/"+pts().length,"CaseFirstTry="+firstTry()+"/4",...tries,...ptries,"TeachBack="+tbList().length+"/"+tbList().length,"Finished="+stamp].join(" | ");
 }
 
 function render(){
-  if(["prac","p2","p3","case","teach","sum"].includes(S.scr)&&!dateOK())S.scr="p1";
+  if(["prac","p2","p3","case","pcase","teach","sum"].includes(S.scr)&&!p1OK())S.scr="p1";
+  if(S.scr==="pcase"&&!S.prop)S.scr="teach";
   sidebar();
   document.getElementById("main").innerHTML=`<div class="wrap">${V[S.scr]()}</div>`;
-  document.title=S.scr==="home"?"Titration Check-In":"Titration Check-In · "+(STEPS.find(s=>s[0]===S.scr)||["","Debrief"])[1].replace(/^\d\s+/,"");
+  document.title=S.scr==="home"?"Titration Check-In":"Titration Check-In · "+(steps().find(s=>s[0]===S.scr)||["","Debrief"])[1].replace(/^\d\s+/,"");
 }
 
-function startCase(){S.q=0;S.m={...M0};S.res=[];S.tap=null;S.att=0;S.first=null;S.lock=false;}
+function startCase(k="v"){S.ck=k;S.q=0;S.m={...CASES[k].M0};S.res=[];S.tap=null;S.att=0;S.first=null;S.lock=false;}
 
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");if(g){go(g.dataset.go);return;}
@@ -336,24 +394,27 @@ document.addEventListener("click",e=>{
     case "exit":fresh();go("home");break;
     case "find":{const c=el.dataset.c;S.sel.has(c)?S.sel.delete(c):S.sel.add(c);render();break;}
     case "toP1":go("p1");break;
-    case "toPrac":if(dateOK())go("prac");break;
+    case "toPrac":if(p1OK())go("prac");break;
     case "tab":S.tab=el.dataset.c;render();break;
     case "verb":S.v[i]=S.v[i]?0:1;render();break;
+    case "inf":S.inf=el.dataset.c;S.prop=S.inf==="prop";if(!S.prop){S.sel.delete("D");S.v[3]=0;S.t[5]=0;}render();break;
     case "toP2":go("p2");break;
     case "toP3":go("p3");break;
-    case "toCase":startCase();go("case");break;
-    case "opt":{if(S.lock)break;const o=Q[S.q].o[i];S.att++;if(S.first==null)S.first=!!o[1];S.tap=i;if(o[1]){S.lock=true;Object.assign(S.m,Q[S.q].done);}render();break;}
-    case "nextQ":S.res.push({q:S.q+1,correctFirst:S.first,att:S.att});
-      if(S.q<3){S.q++;S.tap=null;S.att=0;S.first=null;S.lock=false;if(Q[S.q].enter)S.m={...Q[S.q].enter};go("case");}else go("teach");break;
-    case "restartCase":startCase();S.t=[0,0,0,0,0];go("case");break;
+    case "toCase":startCase("v");S.resV=[];S.resP=[];go("case");break;
+    case "opt":{if(S.lock)break;const QQ=CASES[S.ck].Q,o=QQ[S.q].o[i];S.att++;if(S.first==null)S.first=!!o[1];S.tap=i;if(o[1]){S.lock=true;Object.assign(S.m,QQ[S.q].done);}render();break;}
+    case "nextQ":{const QQ=CASES[S.ck].Q;S.res.push({q:S.q+1,correctFirst:S.first,att:S.att});
+      if(S.q<QQ.length-1){S.q++;S.tap=null;S.att=0;S.first=null;S.lock=false;if(QQ[S.q].enter)S.m={...QQ[S.q].enter};go(S.ck==="p"?"pcase":"case");}
+      else if(S.ck==="v"){S.resV=S.res;if(S.prop){startCase("p");go("pcase");}else go("teach");}
+      else{S.resP=S.res;go("teach");}break;}
+    case "restartCase":startCase("v");S.resV=[];S.resP=[];S.t=[0,0,0,0,0,0];go("case");break;
     case "tb":S.t[i]=S.t[i]?0:1;render();break;
     case "toSum":S.copied=false;S.finished=new Date();go("sum");break;
     case "copy":{const t=recordText();const ok=()=>{S.copied=true;render();};
       try{navigator.clipboard.writeText(t).then(ok,()=>fallbackCopy(t,ok));}catch(_){fallbackCopy(t,ok);}break;}
   }
 });
-document.addEventListener("change",e=>{if(e.target.id==="incdate"){S.date=e.target.value;const b=document.querySelector('[data-act="toPrac"]');if(b)b.disabled=!dateOK();}});
-document.addEventListener("input",e=>{if(e.target.id==="incdate"){S.date=e.target.value;const b=document.querySelector('[data-act="toPrac"]');if(b)b.disabled=!dateOK();}});
+document.addEventListener("change",e=>{if(e.target.id==="incdate"){S.date=e.target.value;const b=document.querySelector('[data-act="toPrac"]');if(b)b.disabled=!p1OK();}});
+document.addEventListener("input",e=>{if(e.target.id==="incdate"){S.date=e.target.value;const b=document.querySelector('[data-act="toPrac"]');if(b)b.disabled=!p1OK();}});
 document.addEventListener("keydown",e=>{const g=e.target.closest&&e.target.closest("[data-go]");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();go(g.dataset.go);}});
 function fallbackCopy(t,ok){const ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");ok();}catch(_){}ta.remove();}
 
