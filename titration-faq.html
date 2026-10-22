@@ -98,7 +98,7 @@ pre{background:var(--tint-d);padding:12px;border-radius:8px;overflow-x:auto;font
 .reviewonly{display:none} body.review .reviewonly{display:block}
 .empty{display:none;color:var(--muted);padding:20px 0}
 footer{color:var(--muted);font-size:13px;padding:28px 0 40px;border-top:1px solid var(--line);margin-top:30px}
-.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);max-width:min(92vw,440px);text-align:center;line-height:1.4;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 @media (max-width:560px){summary{grid-template-columns:1fr}summary .tags{justify-content:flex-start}}
 @media print{.controls,.btn,button{display:none!important}details.faq{break-inside:avoid}details.faq .body{display:block}}
@@ -131,7 +131,7 @@ footer{color:var(--muted);font-size:13px;padding:28px 0 40px;border-top:1px soli
     <div class="row">
       <input type="search" id="q" placeholder="Search: restart, block, 30 minutes, volume…" aria-label="Search FAQ">
       <button id="expand" type="button">Expand all</button>
-      <a class="btn primary" id="ask" href="#" target="_blank" rel="noopener">Ask a question</a>
+      <a class="btn primary" id="ask" href="#" title="Post questions in the titration audit Teams chat">Ask a question</a>
     </div>
     <div class="row chips" id="chips" role="group" aria-label="Filter by topic"></div>
   </div>
@@ -188,7 +188,8 @@ const CONFIG = {
   version: "Living FAQ v1.0",
   updated: "2026-10-22",
   owner: "Scott Brickner, MSN, RN, CCRN · NPD Practitioner, Critical Care",
-  askFormUrl: "",   // paste the Microsoft Forms link for new questions
+  askFormUrl: "",   // leave empty to send questions to the Teams chat
+  askText: "Post your question in the titration audit Teams chat. We'll answer it there and add it to this FAQ.",
   banner: "Living FAQ, updated as new questions come in. Answers marked “Policy · Rev” reflect the latest CP 4-156 revision.",
   scopeNote: "On the titration audit, a finding is limited to titrating outside the ordered dose and frequency. Everything else here is practice guidance."
 };
@@ -464,7 +465,7 @@ document.getElementById("meta").textContent = `${CONFIG.version} · Updated ${CO
 document.getElementById("banner").textContent = CONFIG.banner + " " + CONFIG.scopeNote;
 document.getElementById("foot").innerHTML = `${esc(CONFIG.version)} · Source policies: CP 4-156 (rev. 03/30/2026 plus pending revision), CP 4-113 (rev. 05/22/2025), CP 3-162 (rev. 10/23/2025), CP 5-101, NA 10-127A. Unit preferences are not presented as policy. Always check the current published policy.`;
 const ask = document.getElementById("ask");
-if (CONFIG.askFormUrl) ask.href = CONFIG.askFormUrl; else { ask.href = "#"; ask.addEventListener("click", e => { e.preventDefault(); toast("Question form link not set yet"); }); }
+if (CONFIG.askFormUrl) ask.href = CONFIG.askFormUrl; else { ask.href = "#"; ask.addEventListener("click", e => { e.preventDefault(); toast(CONFIG.askText, 6000); }); }
 
 function card(f){
   const t = TYPE[f.type]; const [sk, sl] = status(f);
@@ -555,7 +556,7 @@ document.getElementById("expand").addEventListener("click", e => {
 if (location.hash) { const d = document.querySelector(location.hash); if (d && d.tagName === "DETAILS") d.open = true; }
 
 /* ===================== TRACKER EXPORT ===================== */
-function toast(msg){ const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 1800); }
+function toast(msg, ms){ const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), ms || 1800); }
 document.getElementById("copyTracker").addEventListener("click", async () => {
   const head = ["#","Question","Source type","Citation","Open item","Gina","Pharmacy","CNS","Overall"];
   const rows = FAQ.map(f => [num(f), f.q, TYPE[f.type].label, f.cite, f.open || "",
