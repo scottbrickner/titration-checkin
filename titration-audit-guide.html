@@ -176,6 +176,29 @@ label.f{display:grid;gap:4px;font-weight:700;font-size:.9rem}
 .explain{margin-top:10px;font-size:.95rem;border-top:1px solid var(--rule);padding-top:8px}
 .score{font-weight:900;font-size:1.1rem}
 
+.roles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.role{appearance:none;font:inherit;font-size:.85rem;font-weight:700;color:var(--ink);background:var(--surface);border:1.5px solid var(--rule);border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;transition:border-color .15s}
+.role:hover{border-color:var(--cardinal)}
+.role.on{border-color:var(--cardinal);background:var(--hover-wash)}
+.sw{width:11px;height:11px;border-radius:2px;display:inline-block}
+.sw.aud{background:var(--muted)} .sw.ed{background:var(--ink)} .sw.mgr{background:var(--stop)}
+ol.plan{list-style:none;margin:0;padding:0 0 0 18px;border-left:2px solid var(--rule);display:grid;gap:12px}
+.pstep{position:relative;border:1.5px solid var(--rule);border-radius:6px;background:var(--surface);padding:12px 14px;display:grid;gap:4px;transition:opacity .15s}
+.pstep::before{content:"";position:absolute;left:-26px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--muted);border:2px solid var(--paper)}
+.pstep.ed::before,.pstep.start::before{background:var(--ink)} .pstep.mgr::before{background:var(--stop)}
+.pstep.dec::before{border-radius:2px;transform:rotate(45deg)}
+.pstep.start{border-color:var(--gold-ink);background:var(--gold-tint)}
+.pstep.ed{border-left:4px solid var(--ink)}
+.pstep.mgr{border-color:var(--stop);background:var(--stop-tint)}
+.pstep .who{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pstep.mgr .who{color:var(--stop)}
+.pstep b{font-size:1.02rem}
+.pstep .warn{margin-top:6px;padding:8px 10px;border-radius:4px;background:var(--stop-tint);font-size:.93rem}
+.fork{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:6px}
+.fork > div{display:flex;gap:8px;align-items:baseline;font-size:.93rem}
+.tag{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:1px 7px;border-radius:999px;border:1px solid currentColor;flex:none}
+.tag.ok{color:var(--ok);background:var(--ok-tint)} .tag.stop{color:var(--stop);background:var(--stop-tint)}
+.plan.filtered .pstep:not(.match){opacity:.35}
 footer{border-top:3px solid var(--rule);padding-block:18px 30px;color:var(--muted);font-size:.88rem}
 footer .grid{gap:6px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -325,18 +348,28 @@ footer .grid{gap:6px}
   </div>
 
   <div class="section">
-    <h3>After a finding</h3>
-    <div class="flow">
-      <div class="node"><b>1. Titration audit finding</b><br>Dose or frequency outside the order, without complete emergent block charting.</div>
-      <div class="arrow" aria-hidden="true">↓</div>
-      <div class="node"><b>2. Just-in-time coaching</b><br>Same shift, face to face, with teach-back. On the form: <b>No – Coached and corrected in real time</b>, plus Coached RN Name and Coached By.</div>
-      <div class="arrow" aria-hidden="true">↓</div>
-      <div class="node alert"><b>If you can't coach and correct in real time</b> (the RN doesn't understand the error, or fails the teach-back): the RN comes off the assignment and can't care for patients on vasoactive or propofol infusions until they demonstrate competence. Tell the charge nurse so patients get reassigned.</div>
-      <div class="arrow" aria-hidden="true">↓</div>
-      <div class="node"><b>3. NPD debrief</b><br>Automatic. Selecting "Coached and corrected in real time" and entering the Coached RN Name sends the RN to the NPDNE Debriefs queue for follow-up education.</div>
-      <div class="arrow" aria-hidden="true">↓</div>
-      <div class="node"><b>4. Manager follow-up</b><br>After nursing education remediation, any further non-compliance goes through progressive discipline. <span class="pill pend">Pending</span> The definition of "repeat" is awaiting a leadership decision.</div>
+    <h3>Vasoactive titration action plan</h3>
+    <p style="color:var(--muted);max-width:66ch;margin-bottom:12px">Who does what from the first audit through follow-up. Pick a role to highlight that role's steps.</p>
+    <div class="roles" role="group" aria-label="Highlight steps by role">
+      <button type="button" class="role on" data-role="all">All steps</button>
+      <button type="button" class="role" data-role="aud"><i class="sw aud"></i>Auditors</button>
+      <button type="button" class="role" data-role="ed"><i class="sw ed"></i>Nursing Education</button>
+      <button type="button" class="role" data-role="mgr"><i class="sw mgr"></i>Managers &amp; ANMs only</button>
     </div>
+    <ol class="plan" id="plan">
+      <li class="pstep start" data-role="ed"><span class="who">Start · Nursing Education</span><b>Bulletin and policy attestation</b><p>100% of ICU RNs receive and complete the Vasoactive Titration Nursing Bulletin and policy review attestation.</p></li>
+      <li class="pstep" data-role="aud"><span class="who">Auditors</span><b>Complete the audit of IV titrations</b><p>Once per shift, current shift only.</p></li>
+      <li class="pstep dec" data-role="aud"><span class="who">Decision</span><b>Does the RN show compliance and competence with the titration policy?</b>
+        <div class="fork"><div class="yes"><span class="tag ok">Yes</span>Education complete. Continue routine audits.</div><div class="no"><span class="tag stop">No</span>Continue below.</div></div></li>
+      <li class="pstep" data-role="aud"><span class="who">Auditors</span><b>Coach now and document on the audit tool</b><p>Just-in-time coaching, face to face, same shift, with teach-back. Select <i>No – Coached and corrected in real time</i> and enter both coaching names. That refers the RN to Nursing Education automatically.</p>
+        <p class="warn"><b>Can't coach and correct in real time?</b> The RN comes off the assignment and can't care for patients on vasoactive or propofol infusions until competence is shown. Tell the charge nurse.</p></li>
+      <li class="pstep ed" data-role="ed"><span class="who">Nursing Education</span><b>Follow-up knowledge check (vasoactive debrief)</b><p>Completed and recorded through MS Teams. When it's done, education is complete. <a href="https://scottbrickner.github.io/titration-checkin/" target="_blank" rel="noopener">Open the Titration Check-In</a></p></li>
+      <li class="pstep" data-role="aud"><span class="who">Auditors</span><b>Keep auditing</b><p>The RN's titrations continue to be audited on later shifts.</p></li>
+      <li class="pstep dec" data-role="aud"><span class="who">Decision</span><b>Compliance and competence after remediation?</b>
+        <div class="fork"><div class="yes"><span class="tag ok">Yes</span>Continue to monitor.</div><div class="no"><span class="tag stop">No</span>Continue below.</div></div></li>
+      <li class="pstep mgr" data-role="mgr"><span class="who">Managers &amp; ANMs only</span><b>Progressive discipline per hospital policy</b><p>Then back to auditing. The loop repeats until the RN shows compliance.</p></li>
+    </ol>
+    <p class="cite" style="margin-top:10px">Auditors: Nursing Managers, ANMs, Nurse Leads and Relief Nurse Leads. Nursing Education: NPDNE.</p>
   </div>
 </section>
 
@@ -596,6 +629,14 @@ footer .grid{gap:6px}
     var ex=c.querySelector('.explain');ex.textContent=(j===Q[i].a?'Correct. ':'Not quite. ')+Q[i].e;ex.hidden=false;score()});
   document.getElementById('quiz-reset').addEventListener('click',drawQuiz);
   drawQuiz();
+
+  /* ---------- action plan role filter ---------- */
+  var plan=document.getElementById('plan'), roles=[].slice.call(document.querySelectorAll('.role'));
+  roles.forEach(function(b){b.addEventListener('click',function(){
+    roles.forEach(function(x){x.classList.toggle('on',x===b)});
+    var r=b.dataset.role; plan.classList.toggle('filtered',r!=='all');
+    [].forEach.call(plan.children,function(li){li.classList.toggle('match',li.dataset.role===r)});
+  })});
 
   /* ---------- open items ---------- */
   var P=[
