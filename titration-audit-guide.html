@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}</style>
+<title>Titration Audit Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&family=Libre+Caslon+Text:ital@1&display=swap">
+<style>
+/* Layout: field-guide page. Masthead + rule banner, sticky tab rail, one working panel at a time. Keck NPD program layer: cream paper, cardinal as sole accent, hairline rules, no card shadows. */
+:root{
+  --paper:#f2ede6; --surface:#fbf8f3; --ink:#111111; --muted:#5f564c; --rule:#c8bfb0;
+  --cardinal:#990000; --cardinal-deep:#6e0000; --cardinal-hover:#990000; --cardinal-tint:#f6e8e8; --hover-wash:#fdf5f5;
+  --gold:#ffcc00; --gold-tint:#fff7d6; --gold-ink:#6b5300;
+  --ok:#1e6b3a; --ok-tint:#e5f2e8; --watch:#8a5a00; --watch-tint:#fbf0d9; --stop:#990000; --stop-tint:#f6e8e8;
+  --on-accent:#ffffff; --mark-ink:#ffffff;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Libre Caslon Text",Georgia,"Times New Roman",serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#1a1614; --surface:#231e1b; --ink:#f1ebe3; --muted:#b8ada0; --rule:#4a413a;
+  --cardinal:#ff7a7a; --cardinal-deep:#b31b1b; --cardinal-hover:#990000; --cardinal-tint:#3a1f1f; --hover-wash:#2d2120;
+  --gold:#ffcc00; --gold-tint:#3a321a; --gold-ink:#ffd84d;
+  --ok:#7fd39b; --ok-tint:#1d3325; --watch:#f2c46b; --watch-tint:#3a2f17; --stop:#ff7a7a; --stop-tint:#3a1f1f;
+  --on-accent:#ffffff; --mark-ink:#1a1614; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --paper:#1a1614; --surface:#231e1b; --ink:#f1ebe3; --muted:#b8ada0; --rule:#4a413a;
+  --cardinal:#ff7a7a; --cardinal-deep:#b31b1b; --cardinal-hover:#990000; --cardinal-tint:#3a1f1f; --hover-wash:#2d2120;
+  --gold:#ffcc00; --gold-tint:#3a321a; --gold-ink:#ffd84d;
+  --ok:#7fd39b; --ok-tint:#1d3325; --watch:#f2c46b; --watch-tint:#3a2f17; --stop:#ff7a7a; --stop-tint:#3a1f1f;
+  --on-accent:#ffffff; --mark-ink:#1a1614; color-scheme:dark;}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1 em,h2 em,h3 em{font-style:normal;color:var(--cardinal)}
+p{margin:0}
+a{color:var(--cardinal)}
+:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px}
+
+/* masthead */
+.mast{padding-block:28px 18px;border-bottom:3px solid var(--rule)}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.mast h1{font-weight:900;text-transform:uppercase;font-size:clamp(2rem,6vw,3.3rem);line-height:.98;letter-spacing:-.01em;margin-top:8px}
+.mast .sub{margin-top:10px;color:var(--muted);max-width:62ch}
+.rulebox{margin-top:20px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;border:1.5px solid var(--cardinal);border-radius:6px;padding:14px 16px;background:var(--surface)}
+.rulebox .q{font-family:var(--serif);font-style:italic;font-size:1.3rem;line-height:1.3}
+.rulebox .q + p{margin-top:4px;color:var(--muted);font-size:.95rem}
+.mark{width:26px;height:26px;border-radius:50%;display:inline-grid;place-items:center;font-weight:900;font-size:.9rem;color:var(--mark-ink);flex:none}
+.mark.ok{background:var(--ok)} .mark.watch{background:var(--watch)} .mark.stop{background:var(--stop)}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule)}
+.tabrow{display:flex;gap:2px;overflow-x:auto;scrollbar-width:thin;padding-block:6px}
+.tab{appearance:none;border:0;background:none;font:inherit;font-weight:700;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:9px 12px;border-radius:4px;white-space:nowrap;cursor:pointer;transition:color .15s,background .15s}
+.tab:hover{color:var(--ink);background:var(--hover-wash)}
+.tab[aria-selected="true"]{color:var(--on-accent);background:var(--cardinal-deep)}
+main{padding-block:26px 48px}
+.panel h2{font-weight:900;text-transform:uppercase;font-size:clamp(1.5rem,4vw,2.1rem);line-height:1.05}
+.panel > .lede{margin-top:8px;color:var(--muted);max-width:66ch}
+.section{margin-top:26px}
+.section > h3{font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--rule);margin-bottom:12px}
+
+/* generic */
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{border:1.5px solid var(--rule);border-radius:6px;background:var(--surface);padding:14px 16px;min-width:0}
+.card h4{margin:0 0 6px;font-size:1.02rem;font-weight:700}
+.card p + p, .card p + ul, .card ul + p{margin-top:6px}
+.card ul{margin:0;padding-left:1.1em}
+.k{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.pill.fd{color:var(--stop);background:var(--stop-tint)}
+.pill.pp{color:var(--watch);background:var(--watch-tint)}
+.pill.tt{color:var(--ok);background:var(--ok-tint)}
+.pill.pend{color:var(--gold-ink);background:var(--gold-tint)}
+.cite{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.facts{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:0;border-top:1px solid var(--rule)}
+.facts > div{padding:10px 0;border-bottom:1px solid var(--rule);min-width:0}
+.facts > div:nth-child(odd){font-weight:700;padding-right:14px}
+@media (max-width:560px){.facts{grid-template-columns:1fr}.facts > div:nth-child(odd){border-bottom:0;padding-bottom:0}}
+.callout{border-radius:6px;padding:12px 14px;background:var(--gold-tint);border:1px solid var(--rule)}
+.callout.stop{background:var(--stop-tint)}
+.scope{display:grid;gap:10px}
+.scope .row{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:start;padding:12px 14px;border:1.5px solid var(--rule);border-radius:6px;background:var(--surface)}
+@media (max-width:560px){.scope .row{grid-template-columns:1fr}}
+
+/* walker */
+.walker{border:1.5px solid var(--rule);border-radius:10px;background:var(--surface);padding:18px}
+.trail{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.trail span{font-size:.78rem;color:var(--muted);border:1px solid var(--rule);border-radius:999px;padding:2px 9px}
+.qtext{font-size:1.25rem;font-weight:700;line-height:1.3}
+.qhelp{margin-top:6px;color:var(--muted);font-size:.95rem}
+.choices{display:grid;gap:8px;margin-top:14px}
+.choice{appearance:none;text-align:left;font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--rule);border-radius:6px;padding:11px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+.choice:hover{border-color:var(--cardinal);background:var(--hover-wash)}
+.choice small{display:block;color:var(--muted);font-size:.85rem}
+.checks{display:grid;gap:6px;margin-top:12px}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);cursor:pointer}
+.checks input{margin-top:4px;accent-color:var(--cardinal);width:17px;height:17px;flex:none}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.btn{appearance:none;font:inherit;font-weight:700;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;border-radius:4px;padding:10px 16px;cursor:pointer;border:1.5px solid var(--cardinal-deep);background:var(--cardinal-deep);color:var(--on-accent);transition:background .15s}
+.btn:hover{background:var(--cardinal-hover)}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--cardinal);background:var(--hover-wash)}
+.verdict{border-radius:8px;padding:16px;border:1.5px solid}
+.verdict.ok{border-color:var(--ok);background:var(--ok-tint)}
+.verdict.watch{border-color:var(--watch);background:var(--watch-tint)}
+.verdict.stop{border-color:var(--stop);background:var(--stop-tint)}
+.verdict .vh{display:flex;gap:10px;align-items:center;font-weight:900;text-transform:uppercase;font-size:1.15rem;letter-spacing:.02em}
+.verdict .body{margin-top:10px;display:grid;gap:8px}
+.verdict .entry{font-size:.93rem;border-top:1px solid var(--rule);padding-top:8px}
+
+/* tables */
+.tbl{overflow-x:auto;border:1.5px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.95rem}
+th{text-align:left;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--on-accent);background:var(--cardinal-deep);padding:9px 12px}
+td{padding:10px 12px;border-top:1px solid var(--rule);vertical-align:top}
+tbody tr:nth-child(even) td{background:rgba(0,0,0,.03)}
+td b{font-weight:700}
+
+/* item rules accordions */
+details.item{border:1.5px solid var(--rule);border-radius:6px;background:var(--surface)}
+details.item + details.item{margin-top:8px}
+details.item summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+details.item summary::-webkit-details-marker{display:none}
+details.item summary::before{content:"+";font-weight:900;color:var(--cardinal);width:14px}
+details.item[open] summary::before{content:"–"}
+details.item summary .t{font-weight:700;font-size:1.05rem;flex:1 1 220px}
+details.item .in{padding:0 16px 14px 38px;display:grid;gap:8px}
+@media (max-width:560px){details.item .in{padding-left:16px}}
+
+/* steps */
+ol.steps{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:s}
+ol.steps > li{counter-increment:s;display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:start}
+ol.steps > li::before{content:counter(s);font-weight:900;font-size:1.6rem;line-height:1;color:var(--cardinal)}
+ol.steps > li > div{min-width:0}
+.flow{display:grid;gap:0}
+.flow .node{border:1.5px solid var(--rule);border-radius:6px;background:var(--surface);padding:12px 14px}
+.flow .node.alert{border-color:var(--stop);background:var(--stop-tint)}
+.flow .arrow{text-align:center;color:var(--cardinal);font-weight:900;line-height:1.6}
+
+/* search */
+.search{width:100%;font:inherit;padding:10px 12px;border:1.5px solid var(--rule);border-radius:6px;background:var(--surface);color:var(--ink)}
+.faq details{border-bottom:1px solid var(--rule)}
+.faq summary{cursor:pointer;padding:12px 0;font-weight:700;list-style:none;display:flex;gap:10px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"+";color:var(--cardinal);font-weight:900;width:14px;flex:none}
+.faq details[open] summary::before{content:"–"}
+.faq .a{padding:0 0 14px 24px;display:grid;gap:6px}
+.empty{color:var(--muted);padding:12px 0}
+
+/* script builder */
+select,textarea{font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--rule);border-radius:6px;padding:9px 10px;width:100%}
+textarea{min-height:150px;resize:vertical;line-height:1.5}
+label.f{display:grid;gap:4px;font-weight:700;font-size:.9rem}
+.status{font-size:.85rem;color:var(--ok);min-height:1.2em}
+
+/* quiz */
+.qcard{border:1.5px solid var(--rule);border-radius:8px;background:var(--surface);padding:16px}
+.qcard + .qcard{margin-top:12px}
+.qcard .stem{font-weight:600}
+.qcard .num{font-weight:900;color:var(--cardinal);margin-right:6px}
+.opt{appearance:none;display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--rule);border-radius:6px;padding:9px 12px;margin-top:8px;cursor:pointer;transition:border-color .15s}
+.opt:hover:not(:disabled){border-color:var(--cardinal)}
+.opt.right{border-color:var(--ok);background:var(--ok-tint)}
+.opt.wrong{border-color:var(--stop);background:var(--stop-tint)}
+.opt:disabled{cursor:default}
+.explain{margin-top:10px;font-size:.95rem;border-top:1px solid var(--rule);padding-top:8px}
+.score{font-weight:900;font-size:1.1rem}
+
+footer{border-top:3px solid var(--rule);padding-block:18px 30px;color:var(--muted);font-size:.88rem}
+footer .grid{gap:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<header class="wrap mast">
+  <div class="eyebrow">Keck Medicine of USC · NPD Critical Care · Titration audit program</div>
+  <h1>Titration <em>Audit</em> Guide</h1>
+  <p class="sub">Everything an auditor needs for the vasoactive and propofol titration audit in one place: when to audit, how to score each drip, how to coach, and how to enter it in the Titration Audit Tool.</p>
+  <div class="rulebox">
+    <span class="mark stop" aria-hidden="true">!</span>
+    <div>
+      <p class="q">Audit the policy, not your practice.</p>
+      <p>If the chart meets policy, it's compliant, even if your unit does more. Unit expectations go in Comments, never in a "No."</p>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Guide sections">
+  <div class="wrap tabrow" role="tablist">
+    <button class="tab" role="tab" data-tab="start">Start here</button>
+    <button class="tab" role="tab" data-tab="score">Score a drip</button>
+    <button class="tab" role="tab" data-tab="rules">Item rules</button>
+    <button class="tab" role="tab" data-tab="edge">Edge cases</button>
+    <button class="tab" role="tab" data-tab="coach">Coach &amp; follow-up</button>
+    <button class="tab" role="tab" data-tab="form">Enter the audit</button>
+    <button class="tab" role="tab" data-tab="faq">Auditor FAQ</button>
+    <button class="tab" role="tab" data-tab="practice">Practice</button>
+    <button class="tab" role="tab" data-tab="pending">Open items</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- START -->
+<section class="panel" id="p-start" role="tabpanel">
+  <h2>Before you <em>audit</em></h2>
+  <p class="lede">The audit checks whether nurses titrated vasoactive and propofol infusions the way the provider ordered. It's also how non-compliance gets coached and corrected in real time.</p>
+
+  <div class="section">
+    <h3>What counts as a finding</h3>
+    <div class="grid g2">
+      <div class="card"><h4>Vasoactive infusions</h4><p>Did the RN titrate by the ordered <b>dose</b>, no more often than the ordered <b>frequency</b>?</p><p class="cite">Example: order says titrate by 2 mcg/min q5 min. Every change should be 2 mcg/min or less, at least 5 minutes apart.</p></div>
+      <div class="card"><h4>Propofol infusions</h4><p>Did the RN titrate by the ordered dose, no more often than the ordered frequency?</p><p>A supporting RASS with each titration is a <span class="pill pp">Practice point</span>, and a potential finding. Check it every time and coach any gap.</p><p class="cite">Example: titrate by 5 mcg/kg/min q10 min to RASS −2. Changes no more often than q10 min, each with a documented RASS.</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Logistics</h3>
+    <div class="facts">
+      <div>Who audits</div><div>Managers, ANMs, Nurse Leads, Relief Nurse Leads and SWAT RNs who have been validated by a CNS. Only validated, calibrated auditors' entries count.</div>
+      <div>How often</div><div>Once per shift.</div>
+      <div>When</div><div>No sooner than 6 hours into the shift: <b>1300 or later</b> on days, <b>0100 or later</b> on nights. Your unit can pick a set time that meets this.</div>
+      <div>Review period</div><div>Drip documentation from the <b>current shift only</b>. Audit while the nurse is still working. Retroactive audits defeat the purpose: errors are coached and corrected in real time.</div>
+      <div>Which drips</div><div>Vasoactive drips with titration orders, and <b>all</b> propofol drips. Don't audit a drip that wasn't on at any point during the review period.</div>
+      <div>Where it goes</div><div>The Titration Audit Tool in the Nurse Portal, through the <b>Forms link</b>. Never add entries in the list or grid view. A paper tool is fine as a worksheet, but final results go in the electronic tool.</div>
+      <div>Helpful report</div><div>Discern has a Titration Audit Report. Using it is optional.</div>
+      <div>Stuck on a scenario</div><div>Complete the audit as best you can, then escalate to your unit's CNS.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Three levels of scope</h3>
+    <div class="scope">
+      <div class="row"><span class="pill fd">Finding</span><div><b>Titrated per order (dose and frequency).</b> Required, and the measure this audit reports.</div></div>
+      <div class="row"><span class="pill pp">Practice point</span><div>Emergent titration, block charting, parameter documented before titration, 30-minute reassessment, volume. Audit and coach for the overall process. Not scored as a finding on their own.</div></div>
+      <div class="row"><span class="pill tt">Teaching only</span><div>Propofol orange lock box, port-less tubing. Coach at the bedside. Not scored toward compliance.</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Where to look in Cerner</h3>
+    <div class="grid g3">
+      <div class="card"><div class="k">The order</div><p>Start dose, max dose, increment, frequency and titration parameter (CP 4-156 #7).</p></div>
+      <div class="card"><div class="k">iView · IV drips</div><p>Every rate and dose change, with times. This is where titrations are documented.</p></div>
+      <div class="card"><div class="k">MAR</div><p>Initial rate.</p></div>
+      <div class="card"><div class="k">iView · Clinician Communication</div><p>"Emergent Titration" block charting for rapid titrations.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCORE -->
+<section class="panel" id="p-score" role="tabpanel" hidden>
+  <h2>Score a <em>drip</em></h2>
+  <p class="lede">Walk through one infusion at a time. Each answer takes you to the next question, and you finish with how to score it and what to enter.</p>
+  <div class="section">
+    <div class="walker" id="walker" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- RULES -->
+<section class="panel" id="p-rules" role="tabpanel" hidden>
+  <h2>Item-by-item <em>rules</em></h2>
+  <p class="lede">The scoring definition for every question on the tool, with the policy section behind it.</p>
+  <div class="section" id="rules"></div>
+</section>
+
+<!-- EDGE -->
+<section class="panel" id="p-edge" role="tabpanel" hidden>
+  <h2>Edge <em>cases</em></h2>
+  <p class="lede">The situations auditors ask about most. Type to filter.</p>
+  <div class="section">
+    <input class="search" id="edge-q" type="search" placeholder="Filter: SAT, restart, block, Code Blue…" aria-label="Filter edge cases">
+    <div class="tbl" style="margin-top:12px">
+      <table>
+        <thead><tr><th>Situation</th><th>Score</th><th>Why</th></tr></thead>
+        <tbody id="edge-body"></tbody>
+      </table>
+    </div>
+    <p class="empty" id="edge-empty" hidden>No edge case matches that. Try the Auditor FAQ, or ask your unit CNS.</p>
+  </div>
+</section>
+
+<!-- COACH -->
+<section class="panel" id="p-coach" role="tabpanel" hidden>
+  <h2>Coach, then <em>follow up</em></h2>
+  <p class="lede">Every finding gets just-in-time coaching. The NPD debrief adds to that coaching. It doesn't replace it.</p>
+
+  <div class="section">
+    <h3>Coaching counts only when all four are true</h3>
+    <div class="grid g2">
+      <div class="card"><h4>Face to face, same shift</h4><p>Notes, messages and hand-offs through other people don't count.</p></div>
+      <div class="card"><h4>Finding, practice, why</h4><p>You stated the finding, the correct practice, and why it matters.</p></div>
+      <div class="card"><h4>Teach-back</h4><p>The RN walked you through how they'll titrate going forward.</p></div>
+      <div class="card"><h4>Right RN</h4><p>The RN who did the titration is the one coached and named on the form.</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Build your script (under 2 minutes)</h3>
+    <div class="grid g2">
+      <div class="grid">
+        <label class="f" for="sc-type">Finding
+          <select id="sc-type"></select>
+        </label>
+        <p class="cite">Pick the closest finding, then edit the wording to fit the case. Don't add patient identifiers.</p>
+      </div>
+      <div class="grid">
+        <label class="f" for="sc-text">Script
+          <textarea id="sc-text"></textarea>
+        </label>
+        <div class="btns" style="margin-top:0"><button class="btn" id="sc-copy" type="button">Copy script</button><span class="status" id="sc-status" role="status"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>After a finding</h3>
+    <div class="flow">
+      <div class="node"><b>1. Titration audit finding</b><br>Dose or frequency outside the order, without complete emergent block charting.</div>
+      <div class="arrow" aria-hidden="true">↓</div>
+      <div class="node"><b>2. Just-in-time coaching</b><br>Same shift, face to face, with teach-back. On the form: <b>No – Coached and corrected in real time</b>, plus Coached RN Name and Coached By.</div>
+      <div class="arrow" aria-hidden="true">↓</div>
+      <div class="node alert"><b>If you can't coach and correct in real time</b> (the RN doesn't understand the error, or fails the teach-back): the RN comes off the assignment and can't care for patients on vasoactive or propofol infusions until they demonstrate competence. Tell the charge nurse so patients get reassigned.</div>
+      <div class="arrow" aria-hidden="true">↓</div>
+      <div class="node"><b>3. NPD debrief</b><br>Automatic. Selecting "Coached and corrected in real time" and entering the Coached RN Name sends the RN to the NPDNE Debriefs queue for follow-up education.</div>
+      <div class="arrow" aria-hidden="true">↓</div>
+      <div class="node"><b>4. Manager follow-up</b><br>After nursing education remediation, any further non-compliance goes through progressive discipline. <span class="pill pend">Pending</span> The definition of "repeat" is awaiting a leadership decision.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="panel" id="p-form" role="tabpanel" hidden>
+  <h2>Enter the <em>audit</em></h2>
+  <p class="lede">Use the Forms link for every submission. Entering directly in the list or grid view skips the form's branching and leaves required fields blank. Question numbers change as the form branches.</p>
+  <div class="section">
+    <ol class="steps">
+      <li><div><b>Start the audit.</b> Select your unit and choose Titratable Drips Audit. Pick the pathway that fits:
+        <ul>
+          <li><b>Vasoactive drip</b>: one entry per drip. This pathway also lets you add a propofol audit.</li>
+          <li><b>Propofol only</b>: patient on propofol with no vasoactive titration orders.</li>
+          <li><b>There are no titratable drips on my unit today</b>: then finish the remaining prompts.</li>
+        </ul></div></li>
+      <li><div><b>Date, time, patient.</b> Enter the date and time the audit was <i>performed</i>, in four-digit military time without a colon (0730, 1900). If you're entering later from a worksheet, use the original audit time, not the submission time. Enter the patient's name in the <b>Patient Name</b> field, plus the room number, and verify it against the patient record. Don't substitute initials or a partial FIN. Never put patient identifiers in Comments or the coaching fields.</div></li>
+      <li><div><b>Each vasoactive infusion.</b> Select the drug, compare every documented change with the order in effect at the time, and answer <i>Titrated per provider order – frequency &amp; dose?</i> If you answer No, the block charting question appears.</div></li>
+      <li><div><b>Volume and next bag.</b> VTBI remaining on the pump in <b>mL</b>. Time until the next bag is hung as a <b>number of hours</b>, not a clock time, based on the current rate and regardless of reason. If the drip was on earlier but isn't infusing now, enter <b>999</b>.</div></li>
+      <li><div><b>Another drip?</b> Answer accurately. If Yes, complete the next section. Keep each drug's findings, volume and time together in its own section.</div></li>
+      <li><div><b>Propofol questions</b> (when shown). Titration frequency and dose against the order; block charting separately if it appears. Lock box and port-less tubing are by direct observation, each recorded on its own.</div></li>
+      <li><div><b>Findings and coaching.</b> Select <i>Coached and corrected in real time</i> only when coaching happened and the issue was corrected during the audit.</div></li>
+      <li><div><b>Check, then submit.</b> Unit, patient, date, time and every infusion entry correct; every displayed question answered; coaching names complete (or both blank). Submit and confirm it was accepted.</div></li>
+    </ol>
+  </div>
+  <div class="section">
+    <h3>Coaching name fields</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Situation</th><th>Coached RN Name</th><th>Coached By</th></tr></thead>
+        <tbody>
+          <tr><td>No coaching required</td><td>Leave blank</td><td>Leave blank</td></tr>
+          <tr><td>Coaching provided</td><td>First and last name of the RN coached, spelled as in the directory</td><td>First and last name of the person who coached</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="callout" style="margin-top:12px">Names only in these fields. No "N/A", "none", findings or notes. The debrief queue matches on the name, so a misspelling means the RN doesn't get the follow-up.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="panel" id="p-faq" role="tabpanel" hidden>
+  <h2>Auditor <em>FAQ</em></h2>
+  <p class="lede">From the CNS team's guidance on consistent, accurate auditing. Type to filter.</p>
+  <div class="section">
+    <input class="search" id="faq-q" type="search" placeholder="Filter: 999, paper, propofol only, discontinue…" aria-label="Filter FAQ">
+    <div class="faq" id="faq-list" style="margin-top:8px"></div>
+    <p class="empty" id="faq-empty" hidden>Nothing matches. Check Edge cases, or ask your unit CNS.</p>
+  </div>
+</section>
+
+<!-- PRACTICE -->
+<section class="panel" id="p-practice" role="tabpanel" hidden>
+  <h2>Practice <em>cases</em></h2>
+  <p class="lede">Short calibration cases. Score each one, then read why. Values are examples, not real patients.</p>
+  <div class="section">
+    <div id="quiz"></div>
+    <div class="btns"><span class="score" id="quiz-score" aria-live="polite"></span><button class="btn ghost" id="quiz-reset" type="button">Start over</button></div>
+  </div>
+</section>
+
+<!-- PENDING -->
+<section class="panel" id="p-pending" role="tabpanel" hidden>
+  <h2>Open <em>items</em></h2>
+  <p class="lede">Decisions still waiting on a policy owner or leadership. Until each one is settled, do what the "For now" line says.</p>
+  <div class="section grid" id="pending"></div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <div class="grid">
+    <div><b>Sources:</b> CP 4-156 Administration and Titration of Intravenous Medications (rev. 03/30/2026) · CP 4-113 Controlled Substances · CP 3-162 Awakening and Breathing Trials · Titration Audit Job Aid (Oct 2026) · Titration: Ensuring Consistent and Accurate Auditing Practices (v3, 10/15/2026) · Titration Audit Tool Facilitator Guidelines (Fall 2026).</div>
+    <div>Questions about a scenario: your unit CNS. Internal use for auditors. No patient identifiers on this page or in coaching notes.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- tabs ---------- */
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  function show(id){
+    if(!document.getElementById('p-'+id)) id='start';
+    tabs.forEach(function(t){var on=t.dataset.tab===id;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;
+      document.getElementById('p-'+t.dataset.tab).hidden=!on;});
+    try{localStorage.setItem('tag-tab',id)}catch(e){}
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.tab);window.scrollTo({top:document.querySelector('.tabs').offsetTop,behavior:'auto'})});});
+  var initial=(location.hash||'').replace('#','');
+  if(!initial){try{initial=localStorage.getItem('tag-tab')||''}catch(e){}}
+  show(initial||'start');
+  window.addEventListener('hashchange',function(){show(location.hash.replace('#',''))});
+  document.addEventListener('click',function(e){var g=e.target.closest('[data-goto]');if(g){show(g.dataset.goto);window.scrollTo({top:document.querySelector('.tabs').offsetTop})}});
+
+  /* ---------- walker ---------- */
+  var N={
+    start:{q:'Was this drip infusing at any point during the current shift?',h:'Only drips that were on during the review period get audited.',a:[['Yes','code'],['No','x_noaudit']]},
+    code:{q:'Did the titrations happen during a Code Blue or Rapid Response?',a:[['Yes','x_exempt'],['No','kind']]},
+    kind:{q:'What kind of rate change are you looking at?',a:[['Titrated up or down','order','The usual case'],['Sedation turned off for an SAT','x_sat'],['Sedation restarted at half dose after a failed SAT','x_half'],['Drip titrated off, then restarted','x_restart']]},
+    order:{q:'Did every change stay inside the order?',h:'Each change moves no more than the ordered increment, comes no sooner than the ordered interval, and stays between the ordered start and max dose.',a:[['Yes, every change','x_ok'],['No, at least one change did not','emer']]},
+    emer:{q:'Was the out-of-order titration for an immediate risk to patient safety or a life-threatening condition?',h:'Look at the clinical picture around the change. Check iView Clinician Communication for "Emergent Titration."',a:[['Yes, the clinical picture supports rapid titration','block'],['No emergent justification','x_find']]},
+    block:{q:'Does the emergent titration block document all of these?',h:'Check each element you can find. Don’t look for the provider’s response; policy requires notification only.',checks:['Time of initiation','Medication name','Starting and ending rate/dose','Maximum rate/dose given','Time of completion','Physiologic parameters evaluated','Provider notified as soon as reasonably possible','A new block started if the episode ran longer than 4 hours (check if it didn’t)']}
+  };
+  var X={
+    x_noaudit:{c:'watch',m:'!',t:'Don’t audit this drip',b:['If it wasn’t on at any time in the review period, there’s nothing to audit.','If it’s been titrated off for 4 hours or more (this used to be 2 hours), it should be removed from the pump, disconnected, and the provider team notified. Coach if it’s still hanging.'],cite:'CP 4-156 #12(c) · Auditing Practices v3'},
+    x_exempt:{c:'ok',m:'✓',t:'Exempt',b:['Code Blue and Rapid Response treatment situations aren’t restricted by the titration policy. Don’t score titrations made during the event.'],cite:'CP 4-156 #15'},
+    x_sat:{c:'ok',m:'✓',t:'Not a titration finding',b:['All sedatives are off during a spontaneous awakening trial. Turning propofol off for an SAT isn’t a titration.'],cite:'CP 3-162 #4'},
+    x_half:{c:'watch',m:'!',t:'Don’t score as a finding yet',b:['CP 3-162 says restart at half dose; CP 4-156 #12(a) says restart at the prior rate. A policy-owner ruling is pending.','Score it as not a finding and describe what happened in Comments.'],cite:'CP 3-162 · CP 4-156 #12(a)',pend:true},
+    x_restart:{c:'ok',m:'✓',t:'Compliant when…',b:['…it was restarted at the rate immediately before the pause, or as a new provider order directs. A new order supersedes the prior-rate rule.','Off for 4 hours or more (this used to be 2 hours): it should have been removed and the provider notified.'],cite:'CP 4-156 #12(a–c)'},
+    x_ok:{c:'ok',m:'✓',t:'Titrated per order: Yes',b:['Compliant for the finding item.','Now check the practice points: parameter documented before each titration, 30-minute reassessment, and volume. Coach on any gaps. They don’t change this answer.','Propofol: also observe the lock box and port-less tubing (teaching only).'],entry:'On the form: Titrated per provider order – frequency & dose? = Yes'},
+    x_find:{c:'stop',m:'✕',t:'Finding',b:['An out-of-order titration without emergent justification is an undocumented deviation from the order.','Coach the RN now: face to face, with teach-back.'],entry:'On the form: Titrated per order = No → block charting = No → No – Coached and corrected in real time, with both coaching names.',cite:'CP 4-156 #7(a–d), #13',coach:true},
+    x_blockok:{c:'ok',m:'✓',t:'Compliant: documented emergent titration',b:['Emergent titration with complete block charting is allowed by policy.'],entry:'On the form: Titrated per order = No → block charting complete = Yes. No coaching names needed.',cite:'CP 4-156 #13(a–f), #14'},
+    x_blockno:{c:'stop',m:'✕',t:'Finding: block charting incomplete',b:[],entry:'On the form: Titrated per order = No → block charting = No → No – Coached and corrected in real time, with both coaching names.',cite:'CP 4-156 #13(a–f), #14',coach:true}
+  };
+  var path=[], W=document.getElementById('walker');
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function trail(){return path.length?'<div class="trail">'+path.map(function(p){return '<span>'+esc(p)+'</span>'}).join('')+'</div>':''}
+  function render(id,missing){
+    var h=trail();
+    if(N[id]){
+      var n=N[id];
+      h+='<p class="qtext">'+esc(n.q)+'</p>'+(n.h?'<p class="qhelp">'+esc(n.h)+'</p>':'');
+      if(n.checks){
+        h+='<div class="checks">'+n.checks.map(function(c,i){return '<label><input type="checkbox" id="bc'+i+'"><span>'+esc(c)+'</span></label>'}).join('')+'</div>';
+        h+='<div class="btns"><button class="btn" type="button" id="bc-go">Score it</button><button class="btn ghost" type="button" data-back>Back</button></div>';
+      } else {
+        h+='<div class="choices">'+n.a.map(function(a){return '<button class="choice" type="button" data-next="'+a[1]+'" data-label="'+esc(a[0])+'">'+esc(a[0])+(a[2]?'<small>'+esc(a[2])+'</small>':'')+'</button>'}).join('')+'</div>';
+        if(path.length) h+='<div class="btns"><button class="btn ghost" type="button" data-back>Back</button></div>';
+      }
+    } else {
+      var x=X[id], b=x.b.slice();
+      if(missing&&missing.length) b=['Missing: '+missing.join('; ')+'.','Out-of-parameter titration without complete block charting is an undocumented deviation from the order. Coach the RN now.'];
+      h+='<div class="verdict '+x.c+'"><div class="vh"><span class="mark '+x.c+'" aria-hidden="true">'+x.m+'</span>'+esc(x.t)+(x.pend?' <span class="pill pend">Pending</span>':'')+'</div><div class="body">'+b.map(function(p){return '<p>'+esc(p)+'</p>'}).join('')+
+        (x.entry?'<p class="entry">'+esc(x.entry)+'</p>':'')+(x.cite?'<p class="cite">'+esc(x.cite)+'</p>':'')+'</div></div>';
+      h+='<div class="btns"><button class="btn" type="button" data-restart>Score another drip</button>'+(x.coach?'<button class="btn ghost" type="button" data-goto="coach">Open the coaching script</button>':'')+'<button class="btn ghost" type="button" data-back>Back</button></div>';
+    }
+    W.innerHTML=h; W.dataset.node=id;
+  }
+  var hist=['start'];
+  W.addEventListener('click',function(e){
+    var c=e.target.closest('[data-next]');
+    if(c){path.push(c.dataset.label);hist.push(c.dataset.next);render(c.dataset.next);return}
+    if(e.target.closest('[data-back]')){if(hist.length>1){hist.pop();path.pop();render(hist[hist.length-1])}return}
+    if(e.target.closest('[data-restart]')){path=[];hist=['start'];render('start');return}
+    if(e.target.id==='bc-go'){
+      var miss=[];N.block.checks.forEach(function(c,i){if(!document.getElementById('bc'+i).checked)miss.push(c.replace(/ \(check.*\)$/,'').toLowerCase())});
+      path.push(miss.length?'Block incomplete':'Block complete');var nx=miss.length?'x_blockno':'x_blockok';hist.push(nx);render(nx,miss);
+    }
+  });
+  render('start');
+
+  /* ---------- item rules ---------- */
+  var R=[
+    {t:'Titrated per order',s:'fd',ask:'Was every drip titrated per the provider order during the review period?',yes:'Every rate/dose change stays between the ordered start and max dose, moves in the ordered increment, and happens no more often than the ordered frequency.',no:'Any change exceeds the increment, comes sooner than the ordered interval, or goes above max, and isn’t a properly documented emergent titration.',na:'No titration occurred during the review period.',look:'IV rate changes in iView; initial rate on the MAR.',cite:'CP 4-156 Policy #7(a–d); Procedure 1(c–d)'},
+    {t:'Emergent titration used',s:'pp',when:'Shows only if Titrated per order = No.',ask:'Was the out-of-order titration for an immediate risk to patient safety or a life-threatening condition?',yes:'The clinical picture supports rapid titration. Go to block charting.',no:'No emergent justification. This is a finding.',na:'Code Blue and Rapid Response situations are exempt.',cite:'CP 4-156 Policy #13, #15'},
+    {t:'Block charting complete',s:'pp',when:'Shows only if emergent titration = Yes.',ask:'Does the block document all six elements?',list:['Time of initiation','Medication name','Starting and ending rate/dose','Maximum rate/dose given','Time of completion','Physiologic parameters evaluated'],extra:'Also needed: a new block if the episode runs past 4 hours, and the provider notified as soon as reasonably possible. Don’t require documentation of the provider’s response. Policy requires notification only.',look:'iView Clinician Communication, "Emergent Titration."',cite:'CP 4-156 Policy #13(a–f), #14'},
+    {t:'Parameter documented before titration',s:'pp',ask:'Was the ordered measurable criterion (MAP, HR, RASS, etc.) documented before each titration?',extra:'Sedatives, including propofol, are titrated to RASS. For propofol, a supporting RASS with each titration is a practice point and a potential finding: check it every time and coach any gap.',cite:'CP 4-156 Policy #7(e), #8(c), #9, #10'},
+    {t:'Reassessed 30 minutes after titration',s:'pp',ask:'Was the measurable criterion documented 30 minutes after each titration?',extra:'Also required at initiation and 30 minutes after starting the infusion, and after every titration whether or not the goal was reached. The audit tool doesn’t capture post-titration values: if one is missing or late, coach the RN to align with policy, but don’t record it as a fallout.',cite:'CP 4-156 Policy #10'},
+    {t:'Volume adequate',s:'pp',ask:'At least 20 mL remaining (Pyxis-supplied) or at least 2 hours at the current rate (pharmacy-mixed), with the next bag available?',extra:'Enter VTBI in mL and hours until the next bag. Enter 999 if the drip isn’t infusing now but was on during the review period. The threshold isn’t yet confirmed in policy: coach on it, but don’t cite policy.',pend:true},
+    {t:'Orange lock box and port-less tubing',s:'tt',when:'Shows only if propofol is infusing.',ask:'Is propofol in the orange lock box? Is it hung with port-less tubing?',extra:'MRI exception: the lock box stays in the room and is reattached on return. Lock box keys stay in the Pyxis and go back right after use. Record each by direct observation.',cite:'CP 4-113 (propofol is a controlled substance); Security #13(c), #13(c)(i–ii), #14'}
+  ];
+  var lab={fd:['fd','Finding'],pp:['pp','Practice point'],tt:['tt','Teaching only']};
+  document.getElementById('rules').innerHTML=R.map(function(r,i){
+    var L=lab[r.s];
+    return '<details class="item"'+(i===0?' open':'')+'><summary><span class="t">'+esc(r.t)+'</span><span class="pill '+L[0]+'">'+L[1]+'</span>'+(r.pend?'<span class="pill pend">Pending piece</span>':'')+'</summary><div class="in">'+
+      (r.when?'<p class="cite">'+esc(r.when)+'</p>':'')+
+      '<p><b>Ask:</b> '+esc(r.ask)+'</p>'+
+      (r.yes?'<p><b>Yes:</b> '+esc(r.yes)+'</p>':'')+
+      (r.no?'<p><b>No:</b> '+esc(r.no)+'</p>':'')+
+      (r.na?'<p><b>N/A or exempt:</b> '+esc(r.na)+'</p>':'')+
+      (r.list?'<ol style="margin:0;padding-left:1.3em">'+r.list.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ol>':'')+
+      (r.extra?'<p>'+esc(r.extra)+'</p>':'')+
+      (r.look?'<p><b>Where to look:</b> '+esc(r.look)+'</p>':'')+
+      (r.cite?'<p class="cite">'+esc(r.cite)+'</p>':'')+
+      '</div></details>';
+  }).join('');
+
+  /* ---------- edge cases ---------- */
+  var E=[
+    ['Out-of-parameter titration <b>with</b> complete block charting','ok','Compliant','Emergent titration with documentation is allowed.'],
+    ['Out-of-parameter titration <b>without</b> block charting','stop','Finding','Undocumented deviation from the order.'],
+    ['Meets policy but not the unit’s preferred practice','ok','Compliant','Add a unit practice note in Comments.'],
+    ['Propofol turned off during an SAT','ok','Not a titration finding','All sedatives are off during an SAT (CP 3-162 #4).'],
+    ['Sedation restarted at half dose after a failed SAT','watch','Don’t score as a finding yet','CP 3-162 (half dose) and CP 4-156 #12(a) (prior rate) conflict. Awaiting a policy-owner ruling. Note it in Comments.'],
+    ['Drip titrated off, then restarted','ok','Compliant if restarted at the prior rate, within 4 hours, or per a new order','CP 4-156 #12. The off time is 4 hours (used to be 2 hours).'],
+    ['Drip titrated off and still hanging 4+ hours later','watch','Coach','Remove from the pump, disconnect, and notify the provider team (CP 4-156 #12c). The off time is 4 hours (used to be 2 hours).'],
+    ['Code Blue or Rapid Response','ok','Exempt','CP 4-156 #15.'],
+    ['Measurable criterion missing or late 30 min after titration','watch','Coach, not a fallout','Practice point. Coach to align with policy, which still requires the value (CP 4-156 #10). The tool doesn’t capture post-titration values.'],
+    ['Provider response to emergent titration not documented','ok','Not required','Policy requires notification only (CP 4-156 #14).'],
+    ['Two or more titratable drips ordered with no instruction on which to titrate first','watch','Order clarification','The RN notifies the provider so the order gets clarified.']
+  ];
+  var eb=document.getElementById('edge-body');
+  eb.innerHTML=E.map(function(r){return '<tr><td>'+r[0]+'</td><td><span class="pill '+({ok:'tt',stop:'fd',watch:'pp'}[r[1]])+'">'+r[2]+'</span></td><td>'+r[3]+'</td></tr>'}).join('');
+  function filt(input,rows,empty){var q=input.value.trim().toLowerCase(),n=0;rows.forEach(function(r){var on=!q||r.textContent.toLowerCase().indexOf(q)>-1;r.hidden=!on;if(on)n++});empty.hidden=n>0}
+  var er=[].slice.call(eb.rows), eq=document.getElementById('edge-q');
+  eq.addEventListener('input',function(){filt(eq,er,document.getElementById('edge-empty'))});
+
+  /* ---------- FAQ ---------- */
+  var F=[
+    ['When should I do the audit?','Once per shift, no sooner than 6 hours in: 1300 or later on days, 0100 or later on nights. Your unit can choose a set time that meets this.'],
+    ['What time period do I review?','Drip documentation from the current shift only. Audit while the nurse is still on shift so any error can be coached and corrected in real time.'],
+    ['Which drips are included?','Vasoactive drips with titration orders, and all propofol drips.'],
+    ['Patient is on more than one vasoactive drip with titration orders.','The tool allows multiple drip entries. The same pathway gives you the option to add a propofol audit.'],
+    ['Patient is on propofol but has no vasoactive titration orders.','When prompted, select "Propofol only."'],
+    ['No propofol or vasoactive titration orders on the unit today.','When prompted, select "There are no titratable drips on my unit today."'],
+    ['The drip isn’t infusing when I audit.','If it wasn’t on at any time during the review period, don’t audit it. If it was on for part of the shift, audit it and enter 999 for time until the next bag.'],
+    ['Does "time next bag will be hung" mean when the bag runs dry, or when it expires?','Enter the number of hours until the next bag will be hung, whatever the reason.'],
+    ['How do I enter the time until the next bag?','As a number of hours, not a clock time. Base it on the current rate.'],
+    ['The RN didn’t chart the measurable criterion after titrating.','The audit doesn’t capture post-titration values. It’s a practice point: coach the RN to align with policy, but don’t record it as a fallout. Policy still requires the value at the right time.'],
+    ['Can I use a paper audit tool?','As a worksheet, yes. Final results must be entered in the titration audit tool in the Nurse Portal.'],
+    ['I’m entering the audit later from my worksheet. What time do I use?','The original audit date and time, in military time without a colon (0730, 1900). The audit itself should still happen on the current shift.'],
+    ['Orders keep two or more titratable drips on, with no instruction on which to titrate first.','The RN notifies the provider so the order gets clarified.'],
+    ['There’s an order to discontinue a drip. Can the RN just turn it off?','Yes, abrupt discontinuation is acceptable if it won’t harm the patient. If there’s a safety concern, the RN discusses it with the provider.'],
+    ['A drip has been titrated to zero for a while and is still hanging.','An infusion titrated off for 4 hours (this used to be 2 hours) should be removed from the pump, disconnected and discarded, and the provider team notified (CP 4-156 #12c).'],
+    ['I don’t know how to represent a scenario in the tool.','It’s rare. Complete the audit as best you can, then escalate to your unit’s CNS.'],
+    ['What do I put in the coaching fields if no coaching was needed?','Leave both blank. Don’t enter "N/A" or "none."']
+  ];
+  var fl=document.getElementById('faq-list');
+  fl.innerHTML=F.map(function(f){return '<details><summary>'+esc(f[0])+'</summary><div class="a"><p>'+esc(f[1])+'</p></div></details>'}).join('');
+  var fr=[].slice.call(fl.children), fq=document.getElementById('faq-q');
+  fq.addEventListener('input',function(){filt(fq,fr,document.getElementById('faq-empty'))});
+
+  /* ---------- coaching script ---------- */
+  var S=[
+    ['Change larger than the ordered increment','the titration moved by more than the ordered step','titrate in the ordered increment only','larger jumps than ordered can overshoot the target before the last change has had time to work'],
+    ['Changes sooner than the ordered interval','changes were made sooner than the ordered interval','wait the full ordered interval between changes','the drug needs that time to take effect, and stacking changes can swing the patient past the goal'],
+    ['Dose above the ordered max','the dose went above the ordered maximum','stay at or below the ordered max and call the provider if the patient needs more','going past max means the patient needs a provider reassessment and a new plan'],
+    ['Rapid titration without emergent block charting','the drip was titrated outside the order and there’s no emergent titration block','if the patient is unstable and you need to titrate rapidly, document an emergent titration block in Clinician Communication and notify the provider','without the block, the chart shows a deviation from the order with no record of why'],
+    ['Emergent block charting incomplete','the emergent titration block is missing required elements','document all six: start time, drug, starting and ending dose, max dose, end time, and the parameters you evaluated, and notify the provider','the block is the only record that the rapid titration was justified and safe'],
+    ['Parameter not documented before titration','the ordered parameter wasn’t documented before the titration','document the ordered parameter right before each change','that value is what justifies the change under the order'],
+    ['No 30-minute reassessment','the parameter wasn’t documented 30 minutes after the titration','document the parameter 30 minutes after every titration, whether or not you hit the goal','that’s how we show the change worked and the patient tolerated it']
+  ];
+  var st=document.getElementById('sc-type'), sx=document.getElementById('sc-text'), ss=document.getElementById('sc-status');
+  st.innerHTML=S.map(function(s,i){return '<option value="'+i+'">'+esc(s[0])+'</option>'}).join('');
+  function build(){var s=S[+st.value];sx.value='I’m auditing titratable drips. I noticed '+s[1]+'. Per policy, '+s[2]+'. This matters because '+s[3]+'. Can you walk me through how you’ll titrate this going forward?';ss.textContent=''}
+  st.addEventListener('change',build); build();
+  document.getElementById('sc-copy').addEventListener('click',function(){
+    var t=sx.value;
+    function fallback(){sx.focus();sx.select();ss.textContent='Selected. Press Ctrl+C or Cmd+C to copy.'}
+    try{navigator.clipboard.writeText(t).then(function(){ss.textContent='Copied.'},fallback)}catch(e){fallback()}
+  });
+
+  /* ---------- practice ---------- */
+  var Q=[
+    {s:'Norepinephrine order: titrate by 2 mcg/min q5 min to MAP ≥ 65, max 30 mcg/min. iView shows 4 → 6 mcg/min at 0900 and 6 → 8 mcg/min at 0902. No Clinician Communication entry.',o:['Compliant','Finding','Exempt'],a:1,e:'The second change came 2 minutes after the first, sooner than the q5 interval, and there’s no emergent titration block. That’s a finding. Coach in real time.'},
+    {s:'Same order. The RN titrated rapidly for a MAP in the 40s. Clinician Communication has an Emergent Titration block with all six elements and "provider notified." No provider response is documented.',o:['Compliant','Finding: no provider response','Finding: titrated outside order'],a:0,e:'Emergent titration with complete block charting is allowed. Policy requires provider notification, not documentation of the provider’s response.'},
+    {s:'Propofol was turned off at 0800 for a spontaneous awakening trial.',o:['Finding: not titrated per order','Not a titration finding','Exempt as a Code Blue'],a:1,e:'All sedatives are off during an SAT (CP 3-162 #4). Stopping propofol for the SAT isn’t a titration finding.'},
+    {s:'Every titration is within the order and MAP is documented before each change, but there’s no MAP 30 minutes after the last titration.',o:['Finding on the tool','Coach the RN; not a fallout on the tool','Ignore it'],a:1,e:'The tool doesn’t capture post-titration values. Coach, because CP 4-156 #10 still requires it, but don’t record it as a fallout.'},
+    {s:'Your unit expects MAP charted every 15 minutes on pressors. The chart meets the order and policy but has MAPs every 30 minutes.',o:['Compliant, with a unit note in Comments','Finding','Not applicable'],a:0,e:'Audit the policy, not your practice. Unit expectations go in Comments, never in a "No."'},
+    {s:'You found a dose-frequency error at 1400. You explained it face to face, and the RN did a correct teach-back. What do you select?',o:['Yes – compliant, since it’s been corrected','No – Coached and corrected in real time, with both coaching names','Leave coaching names blank and email the manager'],a:1,e:'Select "No – Coached and corrected in real time" and enter Coached RN Name and Coached By. That sends the RN to the NPDNE Debriefs queue automatically.'},
+    {s:'You explained a finding, but the RN can’t describe what they did wrong or how to fix it.',o:['Note it and move on','RN comes off vasoactive and propofol infusions until competence is shown; tell the charge nurse','Re-audit next shift'],a:1,e:'If you can’t coach and correct in real time, the RN is removed from the assignment and can’t care for patients on these infusions until they demonstrate competence.'}
+  ];
+  var qz=document.getElementById('quiz'), done={}, right=0;
+  function drawQuiz(){done={};right=0;qz.innerHTML=Q.map(function(q,i){return '<div class="qcard" data-q="'+i+'"><p class="stem"><span class="num">'+(i+1)+'</span>'+esc(q.s)+'</p>'+q.o.map(function(o,j){return '<button class="opt" type="button" data-o="'+j+'">'+esc(o)+'</button>'}).join('')+'<p class="explain" hidden></p></div>'}).join('');score()}
+  function score(){var n=Object.keys(done).length;document.getElementById('quiz-score').textContent=n?right+' of '+n+' correct'+(n===Q.length?' · all cases scored':''):Q.length+' cases'}
+  qz.addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b)return;var c=b.closest('.qcard'),i=+c.dataset.q;if(done[i]!==undefined)return;var j=+b.dataset.o;done[i]=j;if(j===Q[i].a)right++;
+    [].forEach.call(c.querySelectorAll('.opt'),function(x){x.disabled=true;var k=+x.dataset.o;if(k===Q[i].a)x.classList.add('right');else if(k===j)x.classList.add('wrong')});
+    var ex=c.querySelector('.explain');ex.textContent=(j===Q[i].a?'Correct. ':'Not quite. ')+Q[i].e;ex.hidden=false;score()});
+  document.getElementById('quiz-reset').addEventListener('click',drawQuiz);
+  drawQuiz();
+
+  /* ---------- open items ---------- */
+  var P=[
+    ['Reassessment window','What counts as "30 minutes after" (for example, no later than 30 minutes).','It’s a practice point. Coach to align with policy if the value is late or missing.'],
+    ['Volume threshold source','Where the 20 mL / 2-hour standard lives in policy.','Coach on it, but don’t cite policy for it.'],
+    ['Sedation restart after a failed SAT','CP 3-162 (half dose) conflicts with CP 4-156 #12(a) (prior rate).','Don’t score it as a finding. Describe it in Comments.'],
+    ['Definition of a repeat finding','When progressive discipline starts after remediation.','Leadership decision pending. Keep entering every finding accurately.']
+  ];
+  document.getElementById('pending').innerHTML=P.map(function(p){return '<div class="card"><h4>'+esc(p[0])+' <span class="pill pend">Pending</span></h4><p>'+esc(p[1])+'</p><p><b>For now:</b> '+esc(p[2])+'</p></div>'}).join('');
+})();
+</script>
+
+</body>
+</html>
