@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ICU Titration Audit Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;900&family=Libre+Caslon+Text:ital@1&display=swap">
+<style>
+/* Layout: one-screen hub. Masthead, four-fact quick strip, then resource groups in the order an auditor needs them. Keck NPD program layer. */
+:root{
+  --paper:#f2ede6; --surface:#fbf8f3; --ink:#111111; --muted:#5f564c; --rule:#c8bfb0;
+  --cardinal:#990000; --cardinal-deep:#6e0000; --hover-wash:#fdf5f5;
+  --gold-tint:#fff7d6; --gold-ink:#6b5300; --on-accent:#ffffff;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Libre Caslon Text",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#1a1614; --surface:#231e1b; --ink:#f1ebe3; --muted:#b8ada0; --rule:#4a413a;
+  --cardinal:#ff7a7a; --cardinal-deep:#b31b1b; --hover-wash:#2d2120;
+  --gold-tint:#3a321a; --gold-ink:#ffd84d; color-scheme:dark;}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2{margin:0;text-wrap:balance}
+p{margin:0}
+:focus-visible{outline:2px solid var(--cardinal);outline-offset:2px}
+.mast{padding-block:26px 18px;border-bottom:3px solid var(--rule)}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font-weight:900;text-transform:uppercase;font-size:clamp(1.9rem,5.5vw,3rem);line-height:1;margin-top:8px}
+h1 em{font-style:normal;color:var(--cardinal)}
+.sub{margin-top:10px;color:var(--muted);max-width:64ch}
+.quote{margin-top:16px;font-family:var(--serif);font-style:italic;font-size:1.15rem}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border:1.5px solid var(--rule);border-radius:6px;background:var(--surface);margin-top:22px}
+.strip div{padding:12px 14px;border-right:1px solid var(--rule)}
+.strip div:last-child{border-right:0}
+@media (max-width:640px){.strip div{border-right:0;border-bottom:1px solid var(--rule)}.strip div:last-child{border-bottom:0}}
+.strip b{display:block;font-weight:900;font-size:1.05rem}
+.strip span{color:var(--muted);font-size:.9rem}
+main{padding-block:8px 40px}
+section{margin-top:26px}
+h2{font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--rule);margin-bottom:12px}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+a.res,div.res{display:flex;flex-direction:column;gap:4px;min-width:0;text-decoration:none;color:var(--ink);border:1.5px solid var(--rule);border-radius:6px;background:var(--surface);padding:14px 16px;transition:border-color .15s,background .15s}
+a.res:hover{border-color:var(--cardinal);background:var(--hover-wash)}
+.res .t{font-weight:700;font-size:1.05rem;display:flex;gap:8px;align-items:baseline;justify-content:space-between}
+.res .t::after{content:"›";color:var(--cardinal);font-weight:900}
+div.res .t::after{content:none}
+.res .d{color:var(--muted);font-size:.93rem}
+.pill{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid currentColor;color:var(--gold-ink);background:var(--gold-tint);align-self:flex-start;white-space:nowrap}
+div.res{border-style:dashed}
+footer{border-top:3px solid var(--rule);padding-block:16px 28px;color:var(--muted);font-size:.88rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="wrap mast">
+  <div class="eyebrow">Keck Medicine of USC · NPD Critical Care</div>
+  <h1>ICU Titration <em>Audit</em> Hub</h1>
+  <p class="sub">Everything for the vasoactive and propofol titration audit: how to score, how to coach, where to enter it, and the policies behind it.</p>
+  <p class="quote">Audit the policy, not your practice.</p>
+  <div class="strip">
+    <div><b>Once per shift</b><span>No sooner than 1300 (days) or 0100 (nights)</span></div>
+    <div><b>Current shift only</b><span>Audit while the RN is still working</span></div>
+    <div><b>Finding</b><span>Dose or frequency outside the order, without complete emergent block charting</span></div>
+    <div><b>Coach every finding</b><span>Face to face, same shift, with teach-back</span></div>
+  </div>
+</header>
+
+<main class="wrap" id="hub"></main>
+
+<footer class="wrap">Questions about a scenario: your unit CNS. Internal use for auditors. No patient identifiers in this chat or on these pages.</footer>
+
+<script>
+/* Edit links here. Leave url empty to show a "coming soon" card. */
+var HUB=[
+  {group:'Do the audit',items:[
+    {t:'Titration Audit Guide',d:'The full auditor reference: scope, item rules, edge cases, form entry and practice cases.',url:'../titration-audit-guide.html'},
+    {t:'Score a drip',d:'Step-by-step scoring for one infusion, ending in what to enter on the form.',url:'../titration-audit-guide.html#score'},
+    {t:'Titration Audit Form',d:'Submit every audit through the Forms link, never the list or grid view.',url:''}
+  ]},
+  {group:'After a finding',items:[
+    {t:'Coaching script',d:'Build a script for a two-minute face-to-face coaching conversation.',url:'../titration-audit-guide.html#coach'},
+    {t:'Titration Check-In',d:'The debrief check-in for RNs referred after a finding.',url:'../'}
+  ]},
+  {group:'Know the rules',items:[
+    {t:'Item rules',d:'What Yes, No and N/A mean for every question on the form.',url:'../titration-audit-guide.html#rules'},
+    {t:'Edge cases',d:'SATs, restarts, Code Blue, block charting and more.',url:'../titration-audit-guide.html#edge'},
+    {t:'CP 4-156 · IV administration and titration',d:'Keck sign-in required.',url:''},
+    {t:'CP 4-113 · Controlled substances',d:'Propofol security. Keck sign-in required.',url:''},
+    {t:'CP 3-162 · Awakening and breathing trials',d:'SAT and SBT. Keck sign-in required.',url:''}
+  ]},
+  {group:'Help and updates',items:[
+    {t:'Auditor FAQ',d:'Logistics: timing, 999, paper worksheets, propofol only and more.',url:'../titration-audit-guide.html#faq'},
+    {t:'Open items',d:'Decisions still pending, and what to do until they are settled.',url:'../titration-audit-guide.html#pending'},
+    {t:'Titration & Vasoactives FAQ',d:'Hot topics for ICU RNs, auditors and managers.',url:''}
+  ]}
+];
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+document.getElementById('hub').innerHTML=HUB.map(function(g){
+  return '<section><h2>'+esc(g.group)+'</h2><div class="grid">'+g.items.map(function(i){
+    return i.url
+      ? '<a class="res" href="'+esc(i.url)+'"><span class="t">'+esc(i.t)+'</span><span class="d">'+esc(i.d)+'</span></a>'
+      : '<div class="res"><span class="t">'+esc(i.t)+'</span><span class="d">'+esc(i.d)+'</span><span class="pill">Coming soon</span></div>';
+  }).join('')+'</div></section>';
+}).join('');
+</script>
+</body>
+</html>
