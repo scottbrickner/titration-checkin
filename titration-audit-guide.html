@@ -16,7 +16,7 @@
   --cardinal:#990000; --cardinal-deep:#6e0000; --cardinal-hover:#990000; --cardinal-tint:#f6e8e8; --hover-wash:#fdf5f5;
   --gold:#ffcc00; --gold-tint:#fff7d6; --gold-ink:#6b5300;
   --ok:#1e6b3a; --ok-tint:#e5f2e8; --watch:#8a5a00; --watch-tint:#fbf0d9; --stop:#990000; --stop-tint:#f6e8e8;
-  --on-accent:#ffffff; --mark-ink:#ffffff;
+  --on-accent:#ffffff; --mark-ink:#ffffff; --lane-aud:#6b6156;
   --sans:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
   --serif:"Libre Caslon Text",Georgia,"Times New Roman",serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -26,13 +26,13 @@
   --cardinal:#ff7a7a; --cardinal-deep:#b31b1b; --cardinal-hover:#990000; --cardinal-tint:#3a1f1f; --hover-wash:#2d2120;
   --gold:#ffcc00; --gold-tint:#3a321a; --gold-ink:#ffd84d;
   --ok:#7fd39b; --ok-tint:#1d3325; --watch:#f2c46b; --watch-tint:#3a2f17; --stop:#ff7a7a; --stop-tint:#3a1f1f;
-  --on-accent:#ffffff; --mark-ink:#1a1614; color-scheme:dark;}}
+  --on-accent:#ffffff; --mark-ink:#1a1614; --lane-aud:#6f655b; color-scheme:dark;}}
 :root[data-theme="dark"]{
   --paper:#1a1614; --surface:#231e1b; --ink:#f1ebe3; --muted:#b8ada0; --rule:#4a413a;
   --cardinal:#ff7a7a; --cardinal-deep:#b31b1b; --cardinal-hover:#990000; --cardinal-tint:#3a1f1f; --hover-wash:#2d2120;
   --gold:#ffcc00; --gold-tint:#3a321a; --gold-ink:#ffd84d;
   --ok:#7fd39b; --ok-tint:#1d3325; --watch:#f2c46b; --watch-tint:#3a2f17; --stop:#ff7a7a; --stop-tint:#3a1f1f;
-  --on-accent:#ffffff; --mark-ink:#1a1614; color-scheme:dark;}
+  --on-accent:#ffffff; --mark-ink:#1a1614; --lane-aud:#6f655b; color-scheme:dark;}
 
 *{box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
@@ -181,24 +181,22 @@ label.f{display:grid;gap:4px;font-weight:700;font-size:.9rem}
 .role:hover{border-color:var(--cardinal)}
 .role.on{border-color:var(--cardinal);background:var(--hover-wash)}
 .sw{width:11px;height:11px;border-radius:2px;display:inline-block}
-.sw.aud{background:var(--muted)} .sw.ed{background:var(--ink)} .sw.mgr{background:var(--stop)}
-ol.plan{list-style:none;margin:0;padding:0 0 0 18px;border-left:2px solid var(--rule);display:grid;gap:12px}
-.pstep{position:relative;border:1.5px solid var(--rule);border-radius:6px;background:var(--surface);padding:12px 14px;display:grid;gap:4px;transition:opacity .15s}
-.pstep::before{content:"";position:absolute;left:-26px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--muted);border:2px solid var(--paper)}
-.pstep.ed::before,.pstep.start::before{background:var(--ink)} .pstep.mgr::before{background:var(--stop)}
-.pstep.dec::before{border-radius:2px;transform:rotate(45deg)}
-.pstep.start{border-color:var(--gold-ink);background:var(--gold-tint)}
-.pstep.ed{border-left:4px solid var(--ink)}
-.pstep.mgr{border-color:var(--stop);background:var(--stop-tint)}
-.pstep .who{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.pstep.mgr .who{color:var(--stop)}
-.pstep b{font-size:1.02rem}
-.pstep .warn{margin-top:6px;padding:8px 10px;border-radius:4px;background:var(--stop-tint);font-size:.93rem}
-.fork{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:6px}
-.fork > div{display:flex;gap:8px;align-items:baseline;font-size:.93rem}
-.tag{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:1px 7px;border-radius:999px;border:1px solid currentColor;flex:none}
-.tag.ok{color:var(--ok);background:var(--ok-tint)} .tag.stop{color:var(--stop);background:var(--stop-tint)}
-.plan.filtered .pstep:not(.match){opacity:.35}
+.sw.ed{background:var(--ink)} .sw.mgr{background:var(--stop)}
+.mapwrap{overflow-x:auto;border:1.5px solid var(--rule);border-radius:8px;background:var(--surface);padding:10px}
+.pmap{display:block;width:100%;min-width:760px;height:auto;font-family:var(--sans)}
+.pmap text{font-size:13px;font-weight:600;text-anchor:middle}
+.pmap .s{font-size:12.5px;font-weight:400}.pmap .xs{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.pmap .b{font-weight:900;letter-spacing:.12em}
+.pmap .panel{fill:var(--stop-tint);opacity:.7}
+.pmap .plabel{text-anchor:start;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;fill:var(--stop)}
+.pmap .ln path{fill:none;stroke:var(--gold-ink);stroke-width:2;marker-end:url(#ah)}
+.pmap .ahead{fill:var(--gold-ink)}
+.pmap .yn{font-size:11px;font-weight:900;letter-spacing:.1em;fill:var(--stop);text-anchor:start}
+.pmap .n-aud{fill:var(--lane-aud)}.pmap .n-ed{fill:var(--ink)}.pmap .n-mgr{fill:var(--cardinal-deep)}.pmap .n-gold{fill:var(--gold)}
+.pmap .t-light{fill:#ffffff}.pmap .t-dark{fill:#111111}.pmap .t-inv{fill:var(--paper)}
+.pmap .fnode{transition:opacity .15s}
+.pmap.filtered .fnode:not(.match){opacity:.25}
+.warn{margin:0;padding:12px 14px;border-radius:6px;background:var(--stop-tint);border:1px solid var(--rule)}
+.sw.aud{background:var(--lane-aud)}
 footer{border-top:3px solid var(--rule);padding-block:18px 30px;color:var(--muted);font-size:.88rem}
 footer .grid{gap:6px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -349,26 +347,46 @@ footer .grid{gap:6px}
 
   <div class="section">
     <h3>Vasoactive titration action plan</h3>
-    <p style="color:var(--muted);max-width:66ch;margin-bottom:12px">Who does what from the first audit through follow-up. Pick a role to highlight that role's steps.</p>
+    <p style="color:var(--muted);max-width:66ch;margin-bottom:12px">Who does what from the first audit through follow-up. Pick a role to highlight its steps. On a phone, scroll the map sideways.</p>
     <div class="roles" role="group" aria-label="Highlight steps by role">
       <button type="button" class="role on" data-role="all">All steps</button>
       <button type="button" class="role" data-role="aud"><i class="sw aud"></i>Auditors</button>
       <button type="button" class="role" data-role="ed"><i class="sw ed"></i>Nursing Education</button>
       <button type="button" class="role" data-role="mgr"><i class="sw mgr"></i>Managers &amp; ANMs only</button>
     </div>
-    <ol class="plan" id="plan">
-      <li class="pstep start" data-role="ed"><span class="who">Start · Nursing Education</span><b>Bulletin and policy attestation</b><p>100% of ICU RNs receive and complete the Vasoactive Titration Nursing Bulletin and policy review attestation.</p></li>
-      <li class="pstep" data-role="aud"><span class="who">Auditors</span><b>Complete the audit of IV titrations</b><p>Once per shift, current shift only.</p></li>
-      <li class="pstep dec" data-role="aud"><span class="who">Decision</span><b>Does the RN show compliance and competence with the titration policy?</b>
-        <div class="fork"><div class="yes"><span class="tag ok">Yes</span>Education complete. Continue routine audits.</div><div class="no"><span class="tag stop">No</span>Continue below.</div></div></li>
-      <li class="pstep" data-role="aud"><span class="who">Auditors</span><b>Coach now and document on the audit tool</b><p>Just-in-time coaching, face to face, same shift, with teach-back. Select <i>No – Coached and corrected in real time</i> and enter both coaching names. That refers the RN to Nursing Education automatically.</p>
-        <p class="warn"><b>Can't coach and correct in real time?</b> The RN comes off the assignment and can't care for patients on vasoactive or propofol infusions until competence is shown. Tell the charge nurse.</p></li>
-      <li class="pstep ed" data-role="ed"><span class="who">Nursing Education</span><b>Follow-up knowledge check (vasoactive debrief)</b><p>Completed and recorded through MS Teams. When it's done, education is complete. <a href="https://scottbrickner.github.io/titration-checkin/" target="_blank" rel="noopener">Open the Titration Check-In</a></p></li>
-      <li class="pstep" data-role="aud"><span class="who">Auditors</span><b>Keep auditing</b><p>The RN's titrations continue to be audited on later shifts.</p></li>
-      <li class="pstep dec" data-role="aud"><span class="who">Decision</span><b>Compliance and competence after remediation?</b>
-        <div class="fork"><div class="yes"><span class="tag ok">Yes</span>Continue to monitor.</div><div class="no"><span class="tag stop">No</span>Continue below.</div></div></li>
-      <li class="pstep mgr" data-role="mgr"><span class="who">Managers &amp; ANMs only</span><b>Progressive discipline per hospital policy</b><p>Then back to auditing. The loop repeats until the RN shows compliance.</p></li>
-    </ol>
+    <div class="mapwrap">
+    <svg class="pmap" id="plan" viewBox="0 0 960 640" role="img" aria-labelledby="pm-t pm-d">
+      <title id="pm-t">Vasoactive titration action plan process map</title>
+      <desc id="pm-d">After the bulletin and policy attestation, auditors complete the titration audit. If the RN is compliant, education is complete. If not, the auditor coaches and documents on the audit tool, which refers the RN to Nursing Education for a follow-up knowledge check. Auditing continues. If the RN is compliant after remediation, continue to monitor. If not, managers and ANMs administer progressive discipline per hospital policy, then auditing continues.</desc>
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ahead" d="M0 0L10 5L0 10z"/></marker></defs>
+      <rect class="panel" x="556" y="140" width="400" height="492" rx="8"/>
+      <text class="plabel" x="574" y="162">After remediation</text>
+      <g class="ln">
+        <path d="M370 60V86"/><path d="M370 128V146"/><path d="M250 218H188"/><path d="M370 288V316"/>
+        <path d="M240 364H208"/><path d="M121 314V246"/><path d="M370 410V444"/><path d="M490 466H576"/>
+        <path d="M700 216V392"/><path d="M820 466H890V374"/><path d="M890 262V196H812"/><path d="M700 536V570"/>
+      </g>
+      <text class="yn" x="219" y="210" text-anchor="middle">YES</text>
+      <text class="yn" x="380" y="306">NO</text>
+      <text class="yn" x="844" y="458">NO</text>
+      <text class="yn" x="710" y="558">YES</text>
+      <g class="fnode end"><rect class="n-gold" x="170" y="16" width="620" height="44" rx="22"/><text class="t-dark" x="480" y="34"><tspan class="b">START</tspan> · 100% of ICU RNs receive and complete the vasoactive titration</text><text class="t-dark" x="480" y="51">nursing bulletin and policy review attestation</text></g>
+      <g class="fnode" data-role="aud"><rect class="n-aud" x="250" y="86" width="240" height="42" rx="3"/><text class="t-light" x="370" y="112">Complete audit of IV titrations</text></g>
+      <g class="fnode" data-role="aud"><polygon class="n-aud" points="370,146 490,218 370,290 250,218"/><text class="t-light" x="370" y="206">Does the RN show</text><text class="t-light" x="370" y="222">compliance and competence</text><text class="t-light" x="370" y="238">with titration policy?</text></g>
+      <g class="fnode end"><rect class="n-gold" x="36" y="194" width="152" height="50" rx="25"/><text class="t-dark" x="112" y="223">Education complete</text></g>
+      <g class="fnode" data-role="aud"><rect class="n-aud" x="240" y="316" width="260" height="94" rx="3"/><text class="t-light" x="370" y="342">Coach now (just-in-time)</text><text class="t-light" x="370" y="359">and document on the audit tool.</text><text class="t-light s" x="370" y="381">This refers the RN to Nursing</text><text class="t-light s" x="370" y="397">Education automatically.</text></g>
+      <g class="fnode" data-role="ed"><rect class="n-ed" x="36" y="314" width="172" height="100" rx="3"/><text class="t-inv" x="122" y="342">Follow-up knowledge</text><text class="t-inv" x="122" y="359">check (vasoactive</text><text class="t-inv" x="122" y="376">debrief), recorded</text><text class="t-inv" x="122" y="393">via MS Teams</text></g>
+      <g class="fnode" data-role="aud"><rect class="n-aud" x="250" y="444" width="240" height="42" rx="3"/><text class="t-light" x="370" y="470">Complete audit of IV titrations</text></g>
+      <g class="fnode" data-role="aud"><rect class="n-aud" x="590" y="174" width="220" height="42" rx="3"/><text class="t-light" x="700" y="200">Complete audit of IV titrations</text></g>
+      <g class="fnode" data-role="aud"><polygon class="n-aud" points="700,394 820,466 700,538 580,466"/><text class="t-light" x="700" y="454">Compliance and</text><text class="t-light" x="700" y="470">competence after</text><text class="t-light" x="700" y="486">remediation?</text></g>
+      <g class="fnode" data-role="mgr"><rect class="n-mgr" x="834" y="262" width="112" height="112" rx="3"/><text class="t-light s" x="890" y="292">Progressive</text><text class="t-light s" x="890" y="308">discipline per</text><text class="t-light s" x="890" y="324">hospital policy</text><text class="t-light xs" x="890" y="346">Managers</text><text class="t-light xs" x="890" y="360">&amp; ANMs only</text></g>
+      <g class="fnode end"><rect class="n-gold" x="620" y="570" width="160" height="46" rx="23"/><text class="t-dark" x="700" y="598">Continue to monitor</text></g>
+    </svg>
+    </div>
+    <div class="grid g2" style="margin-top:12px">
+      <p class="warn"><b>Can't coach and correct in real time?</b> The RN comes off the assignment and can't care for patients on vasoactive or propofol infusions until competence is shown. Tell the charge nurse.</p>
+      <p class="card" style="margin:0">The follow-up knowledge check is the vasoactive debrief. <a href="https://scottbrickner.github.io/titration-checkin/" target="_blank" rel="noopener">Open the Titration Check-In</a></p>
+    </div>
     <p class="cite" style="margin-top:10px">Auditors: Nursing Managers, ANMs, Nurse Leads and Relief Nurse Leads. Nursing Education: NPDNE.</p>
   </div>
 </section>
@@ -635,7 +653,7 @@ footer .grid{gap:6px}
   roles.forEach(function(b){b.addEventListener('click',function(){
     roles.forEach(function(x){x.classList.toggle('on',x===b)});
     var r=b.dataset.role; plan.classList.toggle('filtered',r!=='all');
-    [].forEach.call(plan.children,function(li){li.classList.toggle('match',li.dataset.role===r)});
+    [].forEach.call(plan.querySelectorAll('.fnode'),function(g){g.classList.toggle('match',g.dataset.role===r)});
   })});
 
   /* ---------- open items ---------- */
