@@ -79,7 +79,8 @@ var HUB=[
   {group:'Do the audit',items:[
     {t:'Titration Audit Guide',d:'The full auditor reference: scope, item rules, edge cases, form entry and practice cases.',url:'../titration-audit-guide.html'},
     {t:'Score a drip',d:'Step-by-step scoring for one infusion, ending in what to enter on the form.',url:'../titration-audit-guide.html#score'},
-    {t:'Titration Audit Form',d:'Submit every audit through the Forms link, never the list or grid view.',url:''}
+    {t:'Titration Audit Form',d:'Submit every audit through this form, never the list or grid view.',url:'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=rEkypgs-JEqeDMkKuYkeMLkpTzp-ujtIgo6gOMzELDRUQVlIOVlCOFpTSU9GR1RYU01NVVpPMk9ZOC4u'},
+    {t:'Audit results list',d:'View submitted audits in the Nurses Portal. Don\u2019t enter audits here. Keck sign-in required.',url:'https://keckmedicine.sharepoint.com/sites/KM-NursesPortal/Lists/Moderate%20Sedation%20Audit%20Tool/All%20Items.aspx?env=WebViewList'}
   ]},
   {group:'After a finding',items:[
     {t:'Coaching script',d:'Build a script for a two-minute face-to-face coaching conversation.',url:'../titration-audit-guide.html#coach'},
@@ -88,9 +89,9 @@ var HUB=[
   {group:'Know the rules',items:[
     {t:'Item rules',d:'What Yes, No and N/A mean for every question on the form.',url:'../titration-audit-guide.html#rules'},
     {t:'Edge cases',d:'SATs, restarts, Code Blue, block charting and more.',url:'../titration-audit-guide.html#edge'},
-    {t:'CP 4-156 · IV administration and titration',d:'Keck sign-in required.',url:''},
-    {t:'CP 4-113 · Controlled substances',d:'Propofol security. Keck sign-in required.',url:''},
-    {t:'CP 3-162 · Awakening and breathing trials',d:'SAT and SBT. Keck sign-in required.',url:''}
+    {t:'CP 4-156 · IV administration and titration',d:'Keck sign-in required.',url:'https://keckmedicine.sharepoint.com/:w:/r/sites/KMC-intranet/PoliciesandProcedures/_layouts/15/Doc.aspx?sourcedoc=%7BFD675DBB-C078-43B0-8B13-6E0BFD3E6260%7D&file=CP4-156.doc&action=default&mobileredirect=true&DefaultItemOpen=1'},
+    {t:'CP 4-113 · Controlled substances',d:'Propofol security. Keck sign-in required.',url:'https://keckmedicine.sharepoint.com/:w:/r/sites/KMC-intranet/PoliciesandProcedures/_layouts/15/Doc.aspx?sourcedoc=%7B1F719AFD-7A3E-4094-9CCC-4E2D1F96D86C%7D&file=CP4-113.docx&action=default&mobileredirect=true&DefaultItemOpen=1'},
+    {t:'CP 3-162 · Awakening and breathing trials',d:'SAT and SBT. Keck sign-in required.',url:'https://keckmedicine.sharepoint.com/:w:/r/sites/KMC-intranet/PoliciesandProcedures/_layouts/15/Doc.aspx?sourcedoc=%7B033BEF37-882C-4C6E-9481-072F5BDEDD13%7D&file=CP3-162.docx&action=default&mobileredirect=true&DefaultItemOpen=1'}
   ]},
   {group:'Help and updates',items:[
     {t:'Auditor FAQ',d:'Logistics: timing, 999, paper worksheets, propofol only and more.',url:'../titration-audit-guide.html#faq'},
@@ -102,7 +103,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;
 document.getElementById('hub').innerHTML=HUB.map(function(g){
   return '<section><h2>'+esc(g.group)+'</h2><div class="grid">'+g.items.map(function(i){
     return i.url
-      ? '<a class="res" href="'+esc(i.url)+'"><span class="t">'+esc(i.t)+'</span><span class="d">'+esc(i.d)+'</span></a>'
+      ? '<a class="res" href="'+esc(i.url)+'"'+(/^https?:/.test(i.url)?' target="_blank" rel="noopener"':'')+'><span class="t">'+esc(i.t)+'</span><span class="d">'+esc(i.d)+'</span></a>'
       : '<div class="res"><span class="t">'+esc(i.t)+'</span><span class="d">'+esc(i.d)+'</span><span class="pill">Coming soon</span></div>';
   }).join('')+'</div></section>';
 }).join('');
