@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Titration &amp; Vasoactives FAQ</title>
+<meta name="description" content="IV titration and vasoactive practice points for ICU RNs, auditors and managers. Every answer cites policy or is marked for policy-owner decision.">
+<style>
+:root{
+  --cardinal:#990000; --cardinal-ink:#7a0000; --gold:#FFC72C; --gold-ink:#7a5a00;
+  --bg:#f7f6f3; --surface:#ffffff; --ink:#1b1b1b; --muted:#5c5c5c; --line:#dedbd4;
+  --tint-c:#f8eaea; --tint-g:#fff6dc; --tint-d:#eeeeee; --tint-p:#e9eef6; --blue-ink:#2c4a78;
+  --ok:#1f6b3a; --tint-ok:#e5f2e9; --warn:#8a4b00; --tint-warn:#fdf0e0;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141414; --surface:#1e1e1e; --ink:#ececec; --muted:#a6a6a6; --line:#333;
+    --cardinal:#e05a5a; --cardinal-ink:#f08a8a; --gold-ink:#f2c94c;
+    --tint-c:#3a1d1d; --tint-g:#3a3018; --tint-d:#2a2a2a; --tint-p:#1d2636; --blue-ink:#9db8e6;
+    --ok:#7fd19b; --tint-ok:#17301f; --warn:#f2b366; --tint-warn:#3a2a14;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141414; --surface:#1e1e1e; --ink:#ececec; --muted:#a6a6a6; --line:#333;
+  --cardinal:#e05a5a; --cardinal-ink:#f08a8a; --gold-ink:#f2c94c;
+  --tint-c:#3a1d1d; --tint-g:#3a3018; --tint-d:#2a2a2a; --tint-p:#1d2636; --blue-ink:#9db8e6;
+  --ok:#7fd19b; --tint-ok:#17301f; --warn:#f2b366; --tint-warn:#3a2a14;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--cardinal-ink)}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+header{background:var(--cardinal);color:#fff;border-bottom:4px solid var(--gold)}
+header .wrap{padding-top:22px;padding-bottom:18px}
+.kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+h1{margin:4px 0 6px;font-size:clamp(24px,4vw,32px);line-height:1.15}
+.sub{margin:0;opacity:.92;max-width:62ch}
+.meta{margin-top:10px;font-size:13px;opacity:.85}
+.banner{margin:16px 0 0;padding:10px 14px;border-radius:var(--radius);background:var(--tint-warn);color:var(--warn);font-size:14px;border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
+.controls{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=search]{flex:1 1 240px;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
+button,.btn{font:inherit;font-size:14px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary{background:var(--cardinal);color:#fff;border-color:var(--cardinal)}
+.chips{margin-top:8px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin:18px 0 6px}
+.legend div{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.t-policy{background:var(--tint-c);color:var(--cardinal-ink)}
+.t-policy-rev{background:var(--tint-c);color:var(--cardinal-ink);outline:1px dashed var(--cardinal-ink)}
+.t-practice{background:var(--tint-g);color:var(--gold-ink)}
+.t-decision{background:var(--tint-d);color:var(--muted);outline:1px solid var(--muted)}
+.t-pending{background:var(--tint-p);color:var(--blue-ink)}
+.t-teach{background:var(--tint-p);color:var(--blue-ink)}
+section.topic{margin:28px 0}
+.topic h2{font-size:20px;margin:0 0 4px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.topic h2 .num{color:var(--cardinal-ink);font-variant-numeric:tabular-nums}
+.topic .intro{margin:0 0 12px;color:var(--muted);font-size:14px}
+details.faq{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:var(--radius);margin:8px 0;overflow:hidden}
+details.faq[data-type=policy],details.faq[data-type=policy-rev]{border-left-color:var(--cardinal)}
+details.faq[data-type=practice]{border-left-color:var(--gold)}
+details.faq[data-type=decision]{border-left-color:var(--muted)}
+details.faq[data-type=pending]{border-left-color:var(--blue-ink)}
+summary{list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:start}
+summary::-webkit-details-marker{display:none}
+summary .q{font-weight:650}
+summary .tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+summary .bl{grid-column:1/-1;color:var(--muted);font-size:14.5px}
+details[open] summary .bl{color:var(--ink)}
+.body{padding:0 16px 14px;border-top:1px solid var(--line)}
+.body ul{margin:10px 0;padding-left:20px}
+.body li{margin:4px 0}
+.cite{font-size:13px;color:var(--muted);margin:10px 0 0}
+.cite b{color:var(--ink)}
+.addon{margin:10px 0 0;padding:10px 12px;border-radius:8px;background:var(--tint-g);font-size:14px}
+.addon .tag{margin-right:6px}
+.open{margin:10px 0 0;padding:10px 12px;border-radius:8px;background:var(--tint-d);font-size:14px}
+.appr{display:none;margin:12px 0 0;padding-top:10px;border-top:1px dashed var(--line);font-size:13px}
+body.review .appr{display:block}
+.appr .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px}
+.sig{padding:6px 8px;border-radius:6px;background:var(--tint-d)}
+.sig.approved{background:var(--tint-ok);color:var(--ok)}
+.sig.revise{background:var(--tint-warn);color:var(--warn)}
+.st{white-space:nowrap;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:999px}
+.st.approved{background:var(--tint-ok);color:var(--ok)}
+.st.review{background:var(--tint-d);color:var(--muted)}
+.st.revise{background:var(--tint-warn);color:var(--warn)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:12px 0}
+.panel h3{margin:0 0 6px;font-size:16px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:8px 6px;border-bottom:1px solid var(--line)}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+pre{background:var(--tint-d);padding:12px;border-radius:8px;overflow-x:auto;font-size:12.5px;line-height:1.45}
+.reviewonly{display:none} body.review .reviewonly{display:block}
+.empty{display:none;color:var(--muted);padding:20px 0}
+footer{color:var(--muted);font-size:13px;padding:28px 0 40px;border-top:1px solid var(--line);margin-top:30px}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:560px){summary{grid-template-columns:1fr}summary .tags{justify-content:flex-start}}
+@media print{.controls,.btn,button{display:none!important}details.faq{break-inside:avoid}details.faq .body{display:block}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="kicker">NPDNE · Critical Care · Hot Topics</div>
+    <h1>IV Titration &amp; Vasoactives FAQ</h1>
+    <p class="sub">Practice points for ICU RNs, with an appendix for auditors and managers. Every answer either cites policy or is flagged for a policy-owner decision.</p>
+    <div class="meta" id="meta"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="banner" id="banner"></div>
+
+  <div class="legend" aria-label="Source legend">
+    <div><span class="tag t-policy">Policy</span><span>Stated in the cited policy section. Auditable once approved.</span></div>
+    <div><span class="tag t-policy-rev">Policy · Rev</span><span>From the CP 4-156 revision. Treated as current.</span></div>
+    <div><span class="tag t-practice">Best practice</span><span>Expert consensus (CNS / NPDNE / PharmD). Coach on it, don't cite it as policy.</span></div>
+    <div><span class="tag t-decision">Needs decision</span><span>Policy is silent or unclear. A policy owner has to decide.</span></div>
+    <div><span class="tag t-pending">Source pending</span><span>The source policy hasn't been reviewed yet.</span></div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="row">
+      <input type="search" id="q" placeholder="Search: restart, block, 30 minutes, volume…" aria-label="Search FAQ">
+      <button id="expand" type="button">Expand all</button>
+      <a class="btn primary" id="ask" href="#" target="_blank" rel="noopener">Ask a question</a>
+    </div>
+    <div class="row chips" id="chips" role="group" aria-label="Filter by topic"></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div id="topics"></div>
+  <p class="empty" id="empty">Nothing matches. Try a different word, or use “Ask a question.”</p>
+
+  <section class="topic" id="appendix">
+    <h2><span class="num">A</span> For auditors &amp; managers</h2>
+    <p class="intro">What can be held to as policy right now. A row counts as auditable only when its source is policy <em>and</em> all three reviewers have approved it. Best-practice items are for coaching, not fallouts.</p>
+    <div class="panel tablewrap"><table id="auditTable"><thead><tr><th>#</th><th>Audit criterion</th><th>Source</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="topic reviewonly" id="review">
+    <h2><span class="num">R</span> Reviewer view</h2>
+    <p class="intro">Shown only with <code>?review=1</code> in the URL. Reviewers: Gina Kucherepa (sponsor), Pharmacy, CNS.</p>
+    <div class="panel">
+      <h3>Open items</h3>
+      <div class="tablewrap"><table id="openTable"><thead><tr><th>#</th><th>Question</th><th>What needs deciding</th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <div class="panel">
+      <h3>Approval tracker</h3>
+      <p class="cite">Copy the tracker as a table to paste into Excel or an email for sign-off. Approvals are recorded in the <code>FAQ</code> data at the top of the script.</p>
+      <button id="copyTracker" type="button">Copy approval tracker</button>
+    </div>
+    <div class="panel">
+      <h3>Adding a question</h3>
+      <p class="cite">Copy this block into the <code>FAQ</code> array, fill it in, and commit. The page builds the card, the audit row and the tracker entry from it. If an answer can't cite a policy section, set <code>type: "decision"</code>.</p>
+<pre>{
+  id: "e7", topic: "emergent",
+  q: "Question as a nurse would ask it?",
+  bl: "One-sentence bottom line.",
+  detail: ["Optional supporting point."],
+  type: "policy",            // policy | policy-rev | practice | decision | pending
+  cite: "CP 4-156 Policy §13",
+  addon: "",                 // optional best-practice tip, shown separately from policy
+  open: "",                  // optional: what a policy owner needs to decide
+  audit: "",                 // optional: the auditable criterion
+  approvals: { gina: ["pending"], pharm: ["pending"], cns: ["pending"] }
+  // approved example: gina: ["approved", "GK", "2026-10-23"]
+}</pre>
+    </div>
+  </section>
+</main>
+
+<div class="wrap"><footer id="foot"></footer></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===================== CONFIG ===================== */
+const CONFIG = {
+  version: "Living FAQ v1.0",
+  updated: "2026-10-22",
+  owner: "Scott Brickner, MSN, RN, CCRN · NPD Practitioner, Critical Care",
+  askFormUrl: "",   // paste the Microsoft Forms link for new questions
+  banner: "Living FAQ, updated as new questions come in. Answers marked “Policy · Rev” reflect the latest CP 4-156 revision.",
+  scopeNote: "On the titration audit, a finding is limited to titrating outside the ordered dose and frequency. Everything else here is practice guidance."
+};
+
+const TOPICS = [
+  { key:"params",   n:1, title:"Parameters at titration & 30-minute reassessment", intro:"What to document, when, and where." },
+  { key:"volume",   n:2, title:"Volume remaining", intro:"Not in CP 4-156. These answers are expert-consensus best practice, plus the handoff policy." },
+  { key:"emergent", n:3, title:"Emergent titration & block charting", intro:"When you can go outside the order, and what the block has to show." },
+  { key:"restart",  n:4, title:"Restarting a drip that was titrated off", intro:"The off window changes from 2 hours to 4 hours in the CP 4-156 revision." },
+  { key:"propofol", n:5, title:"Propofol: security & sedation", intro:"Teaching only. Not an audit topic in this FAQ. Propofol is a controlled substance at Keck Medicine of USC (CP 4-113), and SATs follow CP 3-162.", teach:true }
+];
+
+const P = (s) => [s]; // shorthand for approvals
+const PEND = () => ({ gina:P("pending"), pharm:P("pending"), cns:P("pending") });
+
+/* ===================== FAQ DATA ===================== */
+const FAQ = [
+  /* ---- 1. Parameters ---- */
+  { id:"p1", topic:"params",
+    q:"When do I document the titration parameter?",
+    bl:"At initiation, 30 minutes after starting, at the time of every titration, and again no later than 30 minutes after each titration.",
+    detail:["Reassessing sooner than 30 minutes is fine. Later than 30 minutes is out of compliance.",
+            "Every titration starts a new 30-minute window.",
+            "Document the measurable criterion the order names (MAP, SBP, HR, RASS, pain score, etc.), showing the condition under which you increased or decreased the rate."],
+    type:"policy-rev", cite:"CP 4-156 Policy §10 (revised wording); §9",
+    audit:"Ordered parameter documented at the time of each titration and reassessed ≤30 min after.",
+    approvals:PEND() },
+
+  { id:"p2", topic:"params",
+    q:"What does a complete titration order include, and what if mine is missing something?",
+    bl:"Start rate/dose, max rate/dose, increment, frequency of changes, and a measurable parameter. If any of these is missing or unclear, clarify with the provider or clinical pharmacist.",
+    detail:["Parameters have to be quantifiable: BP, HR, pain scale, sedation scale, etc. (§7e.i, §8).",
+            "Analgesics are titrated to a validated pain tool and sedatives to RASS (§8a, §8c)."],
+    type:"policy", cite:"CP 4-156 Policy §7a–e, §8, §3",
+    audit:"Titrations follow the ordered increment, frequency and maximum.",
+    approvals:PEND() },
+
+  { id:"p3", topic:"params",
+    q:"Can I titrate more often, or by a bigger step, than the order allows?",
+    bl:"Not under the routine order. If the patient is at immediate risk, that's an emergent titration and you block chart it (Topic 3). If not, get a new order.",
+    detail:["The RN adjusts the drip per the provider order, including the increment and frequency in that order (§7)."],
+    type:"policy", cite:"CP 4-156 Policy §7c–d, §13, §3",
+    approvals:PEND() },
+
+  { id:"p4", topic:"params",
+    q:"Where does each piece get documented?",
+    bl:"MAR: Begin Bag for every bag, the initial rate, and the discontinue. iView: every rate change after that, including titrations.",
+    detail:["IV boluses from a continuous infusion need their own MAR documentation (Procedure 1b)."],
+    type:"policy", cite:"CP 4-156 Procedure §1a–e",
+    audit:"Each bag has a Begin Bag in the MAR; titrations are charted in iView.",
+    approvals:PEND() },
+
+  { id:"p5", topic:"params",
+    q:"When does the 30-minute reassessment clock start?",
+    bl:"At the time of the last titration. The reassessment is due no later than 30 minutes after that titration.",
+    detail:["A new titration restarts the clock.",
+            "Assessments still have to be documented within 2 hours of being completed (NA 10-127A §2a.iv)."],
+    type:"policy-rev", cite:"CP 4-156 Policy §10 (revised wording); NA 10-127A §2a.iv",
+    audit:"Reassessment time is ≤30 min after the time of the last titration.",
+    approvals:PEND() },
+
+  /* ---- 2. Volume ---- */
+  { id:"v1", topic:"volume",
+    q:"How much should be left in the bag before I change it?",
+    bl:"Pyxis-stocked drips: keep at least a 20 mL allowance. Pharmacy-mixed drips: have the replacement requested while at least 2 hours remain at the current rate.",
+    detail:["When the Alaris near-end alarm goes off, change the bag. Don't keep silencing the alarm and putting it off.",
+            "Vasoactives running dry is a patient-safety event, not just a documentation miss."],
+    type:"practice", cite:"Expert consensus: CNS / NPDNE / PharmD, Oct 2026. Not stated in CP 4-156.",
+    audit:"Coaching only: volume allowance per best practice.",
+    approvals:PEND() },
+
+  { id:"v2", topic:"volume",
+    q:"Which drips count as pharmacy-mixed?",
+    bl:"Current list: angiotensin II, epinephrine, isoproterenol, nitroprusside, vasopressin, and max-concentration amiodarone. Subject to change.",
+    detail:["Pharmacy owns this list, and it may change. If you're not sure whether a drip is pharmacy-mixed, check with your pharmacist."],
+    type:"practice", cite:"Working list: NPDNE / Pharmacy, Oct 2026 (subject to change)",
+    approvals:PEND() },
+
+  { id:"v3", topic:"volume",
+    q:"What do I check about the drips at handoff?",
+    bl:"Handoff happens at the bedside, and you physically verify, using I-TRACE, that every IV medication is running per the provider order.",
+    detail:["This applies to shift change, transfers, procedural areas and temporary coverage such as breaks (CP 5-101 §1).",
+            "Use I-TRACE every time a line is accessed, manipulated or discontinued, and at every handoff (CP 4-156 §18f).",
+            "Propofol and other controlled substance infusions also need a two-person volume check at handoff (CP 4-113 Part II §10d; see 5.5)."],
+
+    type:"policy", cite:"CP 5-101 Policy §1–3; CP 4-156 Policy §18",
+    addon:"At handoff, also review the titration parameters and the expected time to the next bag change, so the oncoming RN isn't caught by an empty bag.",
+    audit:"Bedside handoff includes I-TRACE verification that IV medications match orders.",
+    approvals:PEND() },
+
+  /* ---- 3. Emergent ---- */
+  { id:"e1", topic:"emergent",
+    q:"When am I allowed to titrate outside the order?",
+    bl:"Only when there's an immediate risk to patient safety or a life-threatening condition and rapid titration is necessary.",
+    detail:["Code Blue and Rapid Response treatment aren't restricted by this policy (§15)."],
+    type:"policy", cite:"CP 4-156 Policy §13, §15",
+    approvals:PEND() },
+
+  { id:"e2", topic:"emergent",
+    q:"What has to be in the block charting?",
+    bl:"Six elements: time of initiation, medication name, starting and ending rate/dose, maximum rate/dose, time of completion, and the physiologic parameters you used to decide.",
+    type:"policy", cite:"CP 4-156 Policy §13a–f",
+    audit:"The block contains all six §13 elements.",
+    approvals:PEND() },
+
+  { id:"e3", topic:"emergent",
+    q:"How long can one block run?",
+    bl:"Four hours. If the emergent episode is still going past 4 hours, start a new block.",
+    type:"policy", cite:"CP 4-156 Policy §13",
+    audit:"No single block exceeds 4 hours.",
+    approvals:PEND() },
+
+  { id:"e4", topic:"emergent",
+    q:"Who do I tell, and how do I document that I told them?",
+    bl:"Notify the provider as soon as reasonably possible; additional orders follow from the provider. Document the person notified, the date/time, the event, and their response, including no response and your escalation.",
+    detail:["Use the Clinician Communication section in iView or the Event Summary PowerForm, not flag annotations (NA 10-127A §2c.iii)."],
+    type:"policy", cite:"CP 4-156 Policy §14; NA 10-127A §2c.i–ii",
+    audit:"Provider notification documented with name, time and response.",
+    approvals:PEND() },
+
+  { id:"e5", topic:"emergent",
+    q:"Do I have to stop titrating until the provider updates the order?",
+    bl:"No. While the emergency continues, a complete provider notification covers continued rapid titration under the block.",
+    detail:["Complete means: who you notified, the date and time, the event, and their response, including no response and your escalation (NA 10-127A §2c.ii).",
+            "If the notification is incomplete, the block doesn't cover continued titration."],
+    type:"policy", cite:"CP 4-156 Policy §13–14; NA 10-127A §2c.ii",
+    audit:"Emergent titration continued with a complete provider notification documented.",
+    approvals:PEND() },
+
+  { id:"e6", topic:"emergent",
+    q:"What about titrating at the provider's direction during a bedside procedure (e.g., bronch)?",
+    bl:"Needs a policy-owner decision. CP 4-156 addresses emergent/urgent titration and Code/RRT only, not provider-directed procedural titration.",
+    type:"decision", cite:"Related: CP 4-156 Policy §13, §15",
+    detail:["Until this is decided, ask the provider for a titration order that covers the procedure, or for a new order."],
+    open:"PRIORITY: Is provider-directed titration during a bedside procedure documented as a block? If not, what order and documentation are required?",
+    approvals:PEND() },
+
+  /* ---- 4. Restart ---- */
+  { id:"r1", topic:"restart",
+    q:"Can I leave a drip connected after I've titrated it to off?",
+    bl:"Yes, temporarily, when it's off because the patient no longer meets the criteria for the infusion.",
+    type:"policy", cite:"CP 4-156 Policy §12",
+    approvals:PEND() },
+
+  { id:"r2", topic:"restart",
+    q:"If I need to restart it, at what rate?",
+    bl:"At the rate it was running immediately before you paused it, then titrate per the order. If the provider has written a new order or restart instructions, that order wins.",
+    type:"policy", cite:"CP 4-156 Policy §12a–b",
+    audit:"Restart rate matches the rate before the pause, or the new order.",
+    approvals:PEND() },
+
+  { id:"r3", topic:"restart",
+    q:"How long can a titrated-off drip stay hooked up?",
+    bl:"4 hours (previously 2). Once it has been off for 4 hours: remove it from the pump, disconnect it, discard it, and notify the primary provider/team.",
+    type:"policy-rev", cite:"CP 4-156 Policy §12c (revised: 2 → 4 hours)",
+    audit:"Infusions off ≥4 hours are removed, discarded and the team notified.",
+    approvals:PEND() },
+
+  { id:"r4", topic:"restart",
+    q:"The patient stays stable after the drip is off. Then what?",
+    bl:"If the patient has been stable for 2 hours after the drip was stopped, contact the provider to consider discontinuing the infusion order.",
+    detail:["There are two clocks. At 2 hours stable, call about discontinuing the order (§12d). At 4 hours off, remove and discard the infusion (§12c)."],
+    type:"policy", cite:"CP 4-156 Policy §12d",
+    approvals:PEND() },
+
+  { id:"r5", topic:"restart",
+    q:"The patient needs the drip again. When can I restart it myself?",
+    bl:"When the order is still active and it's within 4 hours of the drip being titrated off. Restart at the rate it was running before the pause, then titrate per the order.",
+    detail:["Any new provider order or restart instructions take priority (§12b).",
+            "Past 4 hours off, the infusion is discarded and the primary provider/team notified (§12c). Restart after that per the provider's direction."],
+    type:"policy-rev", cite:"CP 4-156 Policy §12a–c (revised: 4 hours)",
+    open:"Confirm the after-4-hours piece: does a restart need a provider conversation, or a new order, even when the original order is still active?",
+    approvals:PEND() },
+
+  { id:"r6", topic:"restart",
+    q:"There's an order to discontinue. Can I keep it on the pump just in case?",
+    bl:"No. Remove it from the pump, disconnect it, and discard it promptly, then document the discontinue in the MAR.",
+    detail:["This is about preventing an inadvertent restart (Procedure §1g)."],
+    type:"policy", cite:"CP 4-156 Policy §11; Procedure §1e, §1g",
+    audit:"Discontinued infusions are not left on the pump or connected.",
+    approvals:PEND() },
+
+  /* ---- 5. Propofol (teaching only) ---- */
+  { id:"s1", topic:"propofol",
+    q:"What is propofol titrated to?",
+    bl:"RASS. Propofol is a sedative, and sedatives are titrated to RASS, only after adequate analgesia and after evaluating and treating the causes of agitation.",
+    detail:["After a failed SAT, restart sedation at half the dose and titrate to the ordered RASS goal (CP 3-162 Procedure §3)."],
+    type:"policy", cite:"CP 4-156 Policy §8c, §8c.i",
+    approvals:PEND() },
+
+  { id:"s2", topic:"propofol",
+    q:"Propofol isn't a scheduled drug. Why do we handle it like a controlled substance?",
+    bl:"Because Keck Medicine of USC has named propofol (and ephedrine) a controlled substance, and every element of the controlled substance policy applies to it.",
+    detail:["The policy allows the organization to name a drug a controlled substance to tighten security around every transaction involving it (Definitions)."],
+    type:"policy", cite:"CP 4-113 Policy statement; Definitions: Controlled Substances",
+    approvals:PEND() },
+
+  { id:"s3", topic:"propofol",
+    q:"What are the lock box and tubing requirements?",
+    bl:"A continuous propofol infusion on a pump has to be locked in an orange lock box and run through port-less tubing.",
+    detail:["MRI: the lock box doesn't go on the MRidium pump/pole. It stays in the room. When the patient is back, switch the infusion to the Alaris pump and reattach the lock box (§13c.i; see CP 3-168).",
+            "For short anesthesia cases that need a small volume of propofol, a syringe pump with port-less micro-bore tubing is recommended (§13c.ii)."],
+    type:"policy", cite:"CP 4-113 Part II §13c",
+    approvals:PEND() },
+
+  { id:"s4", topic:"propofol",
+    q:"What are the rules for lock box keys?",
+    bl:"Keys live in the Pyxis. Remove one under the correct patient only, return it right after use, and don't hand it to someone else without logging it out and back in.",
+    detail:["Removing a lock box key under the wrong patient counts as a discrepancy (Definitions).",
+            "Unresolved key discrepancy: notify the unit manager or designee and a pharmacist immediately, and complete an incident report (§14e)."],
+    type:"policy", cite:"CP 4-113 Part II §14a–e",
+    approvals:PEND() },
+
+  { id:"s5", topic:"propofol",
+    q:"Is there a volume check for propofol at handoff?",
+    bl:"Yes. Two licensed personnel physically witness, verify and document the volume in the Controlled Substance Drip Handoff section of the EMR.",
+    detail:["Required at initiation, change-of-shift handoff, transfer to another unit, going to and from procedural areas, and transfer to an outside facility (§10d).",
+            "The documented volume has to be consistent with the volume infused. Report a discrepancy to the manager, and file an incident report if it can't be explained (§10d.i).",
+            "Receipt of the infusion is documented by the RN on the Controlled Substance Drip Checks tab (§10c)."],
+    type:"policy", cite:"CP 4-113 Part II §10c–d",
+    approvals:PEND() },
+
+  { id:"s6", topic:"propofol",
+    q:"How do I waste a propofol infusion?",
+    bl:"Two licensed personnel: one draws up the waste, both verify the volume, the witness watches it go into the CS waste container, and both sign the exact volume on the eMAR.",
+    detail:["Infusion waste is documented on the eMAR, not in the ADC (§4).",
+            "Discontinued controlled substance infusions are disconnected and wasted as soon as possible (§6).",
+            "The waste volume has to match the documented volume infused. Report a discrepancy to the manager, and file an incident report if it can't be explained (§5b)."],
+    type:"policy", cite:"CP 4-113 Part IV §4–6",
+    approvals:PEND() },
+
+  { id:"s7", topic:"propofol",
+    q:"What happens to the propofol during a spontaneous awakening trial (SAT)?",
+    bl:"It gets turned off. Every morning the RN does the SAT safety screen and, if the patient passes, the SAT, with all sedatives off. Analgesics continue at the lowest effective dose.",
+    detail:["Screen-out exclusions include active seizures or sedation for seizures, alcohol withdrawal therapy, RASS >2, ICP ≥20 or sedation to control ICP, neuromuscular blockade, myocardial ischemia in the past 24 hours, comfort care, and an open chest (Procedure §1).",
+            "Record RASS, neuro and hemodynamic status before stopping sedation, at 15 minutes, then every 30 minutes and as needed (Policy §8).",
+            "Holding analgesics, or withholding the SAT when the patient would pass the screen, requires a provider order. Withholding needs a daily order (Policy §12)."],
+    type:"policy", cite:"CP 3-162 Policy §1–4, §8, §12; Procedure §1–2",
+    approvals:PEND() },
+
+  { id:"s8", topic:"propofol",
+    q:"The patient fails the SAT. At what dose do I restart propofol?",
+    bl:"At half the previous dose, then titrate to the ordered RASS goal.",
+    detail:["Failure criteria include sustained agitation (RASS >2 for ≥5 min), SpO₂ <88% or RR >35 for ≥5 min, a new arrhythmia, ICP ≥20, or two or more signs of respiratory distress (Procedure §2).",
+            "Scope: the half-dose restart applies only to the sedatives paused for the SAT (CP 3-162 Policy §4). Vasoactives aren't part of the SAT. A titrated-off vasoactive still restarts per CP 4-156 §12a–b."],
+    type:"policy", cite:"CP 3-162 Policy §4; Procedure §2–3",
+    approvals:PEND() }
+];
+
+/* ===================== RENDER ===================== */
+const TYPE = {
+  "policy":    { cls:"t-policy",     label:"Policy" },
+  "policy-rev":{ cls:"t-policy-rev", label:"Policy · Rev" },
+  "practice":  { cls:"t-practice",   label:"Best practice" },
+  "decision":  { cls:"t-decision",   label:"Needs decision" },
+  "pending":   { cls:"t-pending",    label:"Source pending" }
+};
+const REVIEWERS = [["gina","Gina Kucherepa"],["pharm","Pharmacy"],["cns","CNS"]];
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function status(f){
+  const s = REVIEWERS.map(([k]) => (f.approvals?.[k]?.[0]) || "pending");
+  if (s.includes("revise")) return ["revise","Revisions requested"];
+  if (s.every(x => x === "approved")) return ["approved","Approved"];
+  return ["review","In review"];
+}
+function num(f){ const t = TOPICS.find(t => t.key === f.topic); const i = FAQ.filter(x => x.topic === f.topic).indexOf(f) + 1; return `${t.n}.${i}`; }
+
+const params = new URLSearchParams(location.search);
+if (params.get("review") === "1") document.body.classList.add("review");
+
+document.getElementById("meta").textContent = `${CONFIG.version} · Updated ${CONFIG.updated} · ${CONFIG.owner}`;
+document.getElementById("banner").textContent = CONFIG.banner + " " + CONFIG.scopeNote;
+document.getElementById("foot").innerHTML = `${esc(CONFIG.version)} · Source policies: CP 4-156 (rev. 03/30/2026 plus pending revision), CP 4-113 (rev. 05/22/2025), CP 3-162 (rev. 10/23/2025), CP 5-101, NA 10-127A. Unit preferences are not presented as policy. Always check the current published policy.`;
+const ask = document.getElementById("ask");
+if (CONFIG.askFormUrl) ask.href = CONFIG.askFormUrl; else { ask.href = "#"; ask.addEventListener("click", e => { e.preventDefault(); toast("Question form link not set yet"); }); }
+
+function card(f){
+  const t = TYPE[f.type]; const [sk, sl] = status(f);
+  const topic = TOPICS.find(x => x.key === f.topic);
+  const detail = (f.detail || []).length ? `<ul>${f.detail.map(d => `<li>${esc(d)}</li>`).join("")}</ul>` : "";
+  const addon = f.addon ? `<div class="addon"><span class="tag t-practice">Best practice</span>${esc(f.addon)}</div>` : "";
+  const open = f.open ? `<div class="open"><b>Open item:</b> ${esc(f.open)}</div>` : "";
+  const sigs = REVIEWERS.map(([k, name]) => { const a = f.approvals?.[k] || ["pending"]; const st = a[0] || "pending";
+    return `<div class="sig ${st}"><b>${name}</b><br>${st}${a[1] ? " · " + esc(a[1]) : ""}${a[2] ? " · " + esc(a[2]) : ""}</div>`; }).join("");
+  return `<details class="faq" id="${f.id}" data-type="${f.type}" data-topic="${f.topic}">
+    <summary>
+      <span class="q">${num(f)} ${esc(f.q)}</span>
+      <span class="tags">${topic.teach ? '<span class="tag t-teach">Teaching only</span>' : ""}<span class="tag ${t.cls}">${t.label}</span></span>
+      <span class="bl">${esc(f.bl)}</span>
+    </summary>
+    <div class="body">
+      ${detail}${addon}${open}
+      <p class="cite"><b>Source:</b> ${esc(f.cite)}</p>
+      <div class="appr"><div style="margin-bottom:6px">Approval: <span class="st ${sk}">${sl}</span></div><div class="grid">${sigs}</div></div>
+    </div>
+  </details>`;
+}
+
+function render(){
+  document.getElementById("topics").innerHTML = TOPICS.map(t => `
+    <section class="topic" data-topic="${t.key}">
+      <h2><span class="num">${t.n}</span> ${esc(t.title)} ${t.teach ? '<span class="tag t-teach">Teaching only</span>' : ""}</h2>
+      <p class="intro">${esc(t.intro)}</p>
+      ${FAQ.filter(f => f.topic === t.key).map(card).join("")}
+    </section>`).join("");
+
+  document.querySelector("#auditTable tbody").innerHTML = FAQ.filter(f => f.audit).map(f => {
+    const [sk] = status(f); const isPolicy = f.type === "policy" || f.type === "policy-rev";
+    let s;
+    if (!isPolicy) s = `<span class="st review">Coaching only</span>`;
+    else if (sk === "approved") s = `<span class="st approved">Auditable</span>`;
+    else if (sk === "revise") s = `<span class="st revise">Revisions requested</span>`;
+    else s = `<span class="st review">In review</span>`;
+    return `<tr><td><a href="#${f.id}">${num(f)}</a></td><td>${esc(f.audit)}</td><td><span class="tag ${TYPE[f.type].cls}">${TYPE[f.type].label}</span><br><span class="cite">${esc(f.cite)}</span></td><td>${s}</td></tr>`;
+  }).join("");
+
+  document.querySelector("#openTable tbody").innerHTML = FAQ.filter(f => f.open).map(f =>
+    `<tr><td><a href="#${f.id}">${num(f)}</a></td><td>${esc(f.q)}</td><td>${esc(f.open)}</td></tr>`).join("");
+
+  const chips = document.getElementById("chips");
+  chips.innerHTML = `<button type="button" aria-pressed="true" data-k="all">All</button>` +
+    TOPICS.map(t => `<button type="button" aria-pressed="false" data-k="${t.key}">${t.n}. ${esc(t.title.split(/[:&]/)[0].trim())}</button>`).join("") +
+    `<button type="button" aria-pressed="false" data-k="audit">Auditors</button>`;
+}
+render();
+
+/* ===================== FILTER / SEARCH ===================== */
+let topicFilter = "all";
+const qEl = document.getElementById("q");
+function apply(){
+  const term = qEl.value.trim().toLowerCase();
+  let shown = 0;
+  document.querySelectorAll("section.topic[data-topic]").forEach(sec => {
+    let any = 0;
+    sec.querySelectorAll("details.faq").forEach(d => {
+      const f = FAQ.find(x => x.id === d.id);
+      const hay = [f.q, f.bl, ...(f.detail||[]), f.cite, f.addon, f.open].join(" ").toLowerCase();
+      const ok = (topicFilter === "all" || topicFilter === f.topic) && (!term || hay.includes(term));
+      d.style.display = ok ? "" : "none"; if (ok) { any++; shown++; }
+      if (term && ok) d.open = true;
+    });
+    sec.style.display = (topicFilter === "audit") ? "none" : (any ? "" : "none");
+  });
+  document.getElementById("appendix").style.display = (topicFilter === "all" || topicFilter === "audit") && !term ? "" : "none";
+  document.getElementById("empty").style.display = (!shown && topicFilter !== "audit") ? "block" : "none";
+  try { localStorage.setItem("tfaq-topic", topicFilter); } catch(e){}
+}
+qEl.addEventListener("input", apply);
+document.getElementById("chips").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  topicFilter = b.dataset.k;
+  document.querySelectorAll("#chips button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  apply();
+});
+try { const saved = localStorage.getItem("tfaq-topic"); if (saved) { const b = document.querySelector(`#chips button[data-k="${saved}"]`); if (b) b.click(); } } catch(e){}
+
+let expanded = false;
+document.getElementById("expand").addEventListener("click", e => {
+  expanded = !expanded;
+  document.querySelectorAll("details.faq").forEach(d => d.open = expanded);
+  e.target.textContent = expanded ? "Collapse all" : "Expand all";
+});
+if (location.hash) { const d = document.querySelector(location.hash); if (d && d.tagName === "DETAILS") d.open = true; }
+
+/* ===================== TRACKER EXPORT ===================== */
+function toast(msg){ const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 1800); }
+document.getElementById("copyTracker").addEventListener("click", async () => {
+  const head = ["#","Question","Source type","Citation","Open item","Gina","Pharmacy","CNS","Overall"];
+  const rows = FAQ.map(f => [num(f), f.q, TYPE[f.type].label, f.cite, f.open || "",
+    ...REVIEWERS.map(([k]) => (f.approvals?.[k] || ["pending"]).filter(Boolean).join(" · ")), status(f)[1]]);
+  const tsv = [head, ...rows].map(r => r.map(c => String(c).replace(/\t|\n/g, " ")).join("\t")).join("\n");
+  try { await navigator.clipboard.writeText(tsv); toast("Tracker copied — paste into Excel"); }
+  catch(e){ const ta = document.createElement("textarea"); ta.value = tsv; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); toast("Tracker copied"); }
+});
+</script>
+</body>
+</html>
