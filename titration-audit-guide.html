@@ -208,13 +208,6 @@ footer .grid{gap:6px}
   <div class="eyebrow"><a href="https://scottbrickner.github.io/titration-checkin/hub/" style="color:inherit">← Audit hub</a> · Keck Medicine of USC · NPD Critical Care</div>
   <h1>Titration <em>Audit</em> Guide</h1>
   <p class="sub">Everything an auditor needs for the vasoactive and propofol titration audit in one place: when to audit, how to score each drip, how to coach, and how to enter it in the Titration Audit Tool.</p>
-  <div class="rulebox">
-    <span class="mark stop" aria-hidden="true">!</span>
-    <div>
-      <p class="q">Audit the policy, not your practice.</p>
-      <p>If the chart meets policy, it's compliant, even if your unit does more. Unit expectations go in Comments, never in a "No."</p>
-    </div>
-  </div>
 </header>
 
 <nav class="tabs" aria-label="Guide sections">
@@ -249,23 +242,23 @@ footer .grid{gap:6px}
   <div class="section">
     <h3>Logistics</h3>
     <div class="facts">
-      <div>Who audits</div><div>Managers, ANMs, Nurse Leads, Relief Nurse Leads and SWAT RNs who have been validated by a CNS. Only validated, calibrated auditors' entries count.</div>
+      <div>Who audits</div><div>Managers, ANMs, Nurse Leads, Relief Nurse Leads and SWAT RNs. Only verified, calibrated auditors' entries count.</div>
       <div>How often</div><div>Once per shift.</div>
-      <div>When</div><div>No sooner than 6 hours into the shift: <b>1300 or later</b> on days, <b>0100 or later</b> on nights. Your unit can pick a set time that meets this.</div>
-      <div>Review period</div><div>Drip documentation from the <b>current shift only</b>. Audit while the nurse is still working. Retroactive audits defeat the purpose: errors are coached and corrected in real time.</div>
+      <div>When</div><div>At your unit's standard time. Earlier in the shift is better, so errors can be corrected in real time.</div>
+      <div>Review period</div><div>Drip documentation from the <b>current shift only</b>. Audit while the nurse is still working.</div>
       <div>Which drips</div><div>Vasoactive drips with titration orders, and <b>all</b> propofol drips. Don't audit a drip that wasn't on at any point during the review period.</div>
-      <div>Where it goes</div><div>The Titration Audit Tool in the Nurse Portal, through the <b>Forms link</b>. Never add entries in the list or grid view. A paper tool is fine as a worksheet, but final results go in the electronic tool.</div>
+      <div>Where it goes</div><div>The Titration Audit Tool in the Nurse Portal, through the <b>Forms link</b>. A paper tool is fine as a worksheet, but final results go in the electronic tool.</div>
       <div>Helpful report</div><div>Discern has a Titration Audit Report. Using it is optional.</div>
       <div>Stuck on a scenario</div><div>Complete the audit as best you can, then escalate to your unit's CNS.</div>
     </div>
   </div>
 
   <div class="section">
-    <h3>Three levels of scope</h3>
+    <h3>What gets scored</h3>
     <div class="scope">
       <div class="row"><span class="pill fd">Finding</span><div><b>Titrated per order (dose and frequency).</b> Required, and the measure this audit reports.</div></div>
+      <div class="row"><span class="pill fd">Finding</span><div><b>Propofol orange lock box and port-less tubing.</b> Audited by direct observation.</div></div>
       <div class="row"><span class="pill pp">Practice point</span><div>Emergent titration, block charting, parameter documented before titration, 30-minute reassessment, volume. Audit and coach for the overall process. Not scored as a finding on their own.</div></div>
-      <div class="row"><span class="pill tt">Teaching only</span><div>Propofol orange lock box, port-less tubing. Coach at the bedside. Not scored toward compliance.</div></div>
     </div>
   </div>
 
@@ -496,7 +489,7 @@ footer .grid{gap:6px}
     x_sat:{c:'ok',m:'✓',t:'Not a titration finding',b:['All sedatives are off during a spontaneous awakening trial. Turning propofol off for an SAT isn’t a titration.'],cite:'CP 3-162 #4'},
     x_half:{c:'watch',m:'!',t:'Don’t score as a finding yet',b:['CP 3-162 says restart at half dose; CP 4-156 #12(a) says restart at the prior rate. A policy-owner ruling is pending.','Score it as not a finding and describe what happened in Comments.'],cite:'CP 3-162 · CP 4-156 #12(a)',pend:true},
     x_restart:{c:'ok',m:'✓',t:'Compliant when…',b:['…it was restarted at the rate immediately before the pause, or as a new provider order directs. A new order supersedes the prior-rate rule.','Off for 4 hours or more (this used to be 2 hours): it should have been removed and the provider notified.'],cite:'CP 4-156 #12(a–c)'},
-    x_ok:{c:'ok',m:'✓',t:'Titrated per order: Yes',b:['Compliant for the finding item.','Now check the practice points: parameter documented before each titration, 30-minute reassessment, and volume. Coach on any gaps. They don’t change this answer.','Propofol: also observe the lock box and port-less tubing (teaching only).'],entry:'On the form: Titrated per provider order – frequency & dose? = Yes'},
+    x_ok:{c:'ok',m:'✓',t:'Titrated per order: Yes',b:['Compliant for the finding item.','Now check the practice points: parameter documented before each titration, 30-minute reassessment, and volume. Coach on any gaps. They don’t change this answer.','Propofol: also observe the lock box and port-less tubing. Either one missing is a finding.'],entry:'On the form: Titrated per provider order – frequency & dose? = Yes'},
     x_find:{c:'stop',m:'✕',t:'Finding',b:['An out-of-order titration without emergent justification is an undocumented deviation from the order.','Coach the RN now: face to face, with teach-back.'],entry:'On the form: Titrated per order = No → block charting = No → No – Coached and corrected in real time, with both coaching names.',cite:'CP 4-156 #7(a–d), #13',coach:true},
     x_blockok:{c:'ok',m:'✓',t:'Compliant: documented emergent titration',b:['Emergent titration with complete block charting is allowed by policy.','If the provider’s response isn’t documented, coach it as a practice point.'],entry:'On the form: Titrated per order = No → block charting complete = Yes. No coaching names needed.',cite:'CP 4-156 #13(a–f), #14'},
     x_blockno:{c:'stop',m:'✕',t:'Finding: block charting incomplete',b:[],entry:'On the form: Titrated per order = No → block charting = No → No – Coached and corrected in real time, with both coaching names.',cite:'CP 4-156 #13(a–f), #14',coach:true}
@@ -546,7 +539,7 @@ footer .grid{gap:6px}
     {t:'Parameter documented before titration',s:'pp',ask:'Was the ordered measurable criterion (MAP, HR, RASS, etc.) documented before each titration?',extra:'Sedatives, including propofol, are titrated to RASS. For propofol, a supporting RASS with each titration is a practice point and a potential finding: check it every time and coach any gap.',cite:'CP 4-156 Policy #7(e), #8(c), #9, #10'},
     {t:'Reassessed 30 minutes after titration',s:'pp',ask:'Was the measurable criterion documented 30 minutes after each titration?',extra:'Also required at initiation and 30 minutes after starting the infusion, and after every titration whether or not the goal was reached. The audit tool doesn’t capture post-titration values: if one is missing or late, coach the RN to align with policy, but don’t record it as a fallout.',cite:'CP 4-156 Policy #10'},
     {t:'Volume adequate',s:'pp',ask:'At least 20 mL remaining (Pyxis-supplied) or at least 2 hours at the current rate (pharmacy-mixed), with the next bag available?',extra:'Enter VTBI in mL and hours until the next bag. Enter 999 if the drip isn’t infusing now but was on during the review period. The threshold isn’t yet confirmed in policy: coach on it, but don’t cite policy.',pend:true},
-    {t:'Orange lock box and port-less tubing',s:'tt',when:'Shows only if propofol is infusing.',ask:'Is propofol in the orange lock box? Is it hung with port-less tubing?',extra:'MRI exception: the lock box stays in the room and is reattached on return. Lock box keys stay in the Pyxis and go back right after use. Record each by direct observation.',cite:'CP 4-113 (propofol is a controlled substance); Security #13(c), #13(c)(i–ii), #14'}
+    {t:'Orange lock box and port-less tubing',s:'fd',when:'Shows only if propofol is infusing.',ask:'Is propofol in the orange lock box? Is it hung with port-less tubing?',extra:'MRI exception: the lock box stays in the room and is reattached on return. Lock box keys stay in the Pyxis and go back right after use. Record each by direct observation. Either one missing is a finding: coach at the bedside.',cite:'CP 4-113 (propofol is a controlled substance); Security #13(c), #13(c)(i–ii), #14'}
   ];
   var lab={fd:['fd','Finding'],pp:['pp','Practice point'],tt:['tt','Teaching only']};
   document.getElementById('rules').innerHTML=R.map(function(r,i){
@@ -586,7 +579,7 @@ footer .grid{gap:6px}
 
   /* ---------- FAQ ---------- */
   var F=[
-    ['When should I do the audit?','Once per shift, no sooner than 6 hours in: 1300 or later on days, 0100 or later on nights. Your unit can choose a set time that meets this.'],
+    ['When should I do the audit?','Once per shift, at your unit\u2019s standard time. Earlier in the shift is better, so errors can be corrected in real time.'],
     ['What time period do I review?','Drip documentation from the current shift only. Audit while the nurse is still on shift so any error can be coached and corrected in real time.'],
     ['Which drips are included?','Vasoactive drips with titration orders, and all propofol drips.'],
     ['Patient is on more than one vasoactive drip with titration orders.','The tool allows multiple drip entries. The same pathway gives you the option to add a propofol audit.'],
@@ -635,7 +628,7 @@ footer .grid{gap:6px}
     {s:'Same order. The RN titrated rapidly for a MAP in the 40s. Clinician Communication has an Emergent Titration block with all six elements and "provider notified." No provider response is documented.',o:['Compliant; coach to document the provider response','Finding: no provider response','Finding: titrated outside order'],a:0,e:'Emergent titration with complete block charting is allowed, so it’s compliant. Documenting the provider’s response is a practice point: coach the RN to add it, but it isn’t a finding.'},
     {s:'Propofol was turned off at 0800 for a spontaneous awakening trial.',o:['Finding: not titrated per order','Not a titration finding','Exempt as a Code Blue'],a:1,e:'All sedatives are off during an SAT (CP 3-162 #4). Stopping propofol for the SAT isn’t a titration finding.'},
     {s:'Every titration is within the order and MAP is documented before each change, but there’s no MAP 30 minutes after the last titration.',o:['Finding on the tool','Coach the RN; not a fallout on the tool','Ignore it'],a:1,e:'The tool doesn’t capture post-titration values. Coach, because CP 4-156 #10 still requires it, but don’t record it as a fallout.'},
-    {s:'Your unit expects MAP charted every 15 minutes on pressors. The chart meets the order and policy but has MAPs every 30 minutes.',o:['Compliant, with a unit note in Comments','Finding','Not applicable'],a:0,e:'Audit the policy, not your practice. Unit expectations go in Comments, never in a "No."'},
+    {s:'Your unit expects MAP charted every 15 minutes on pressors. The chart meets the order and policy but has MAPs every 30 minutes.',o:['Compliant, with a unit note in Comments','Finding','Not applicable'],a:0,e:'The chart meets policy, so it\u2019s compliant. Unit expectations go in Comments, never in a "No."'},
     {s:'You found a dose-frequency error at 1400. You explained it face to face, and the RN did a correct teach-back. What do you select?',o:['Yes – compliant, since it’s been corrected','No – Coached and corrected in real time, with both coaching names','Leave coaching names blank and email the manager'],a:1,e:'Select "No – Coached and corrected in real time" and enter Coached RN Name and Coached By. That sends the RN to the NPDNE Debriefs queue automatically.'},
     {s:'You explained a finding, but the RN can’t describe what they did wrong or how to fix it.',o:['Note it and move on','RN comes off vasoactive and propofol infusions until competence is shown; tell the charge nurse','Re-audit next shift'],a:1,e:'If you can’t coach and correct in real time, the RN is removed from the assignment and can’t care for patients on these infusions until they demonstrate competence.'}
   ];
